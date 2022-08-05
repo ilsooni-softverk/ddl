@@ -3487,3 +3487,106 @@ END;
 /
 
 
+
+
+
+ALTER TABLE BOOK MODIFY(BOOKSUMRY VARCHAR2(400)  );
+
+ALTER TABLE BOOK
+	ADD (ISPN CHAR(18) );
+
+CREATE TABLE LogoImages
+(
+	IMG_URL              CHAR(18)  NULL ,
+	PBLISRNO             CHAR(9)  NOT NULL 
+);
+
+COMMENT ON COLUMN LogoImages.PBLISRNO IS '출판사번호';
+
+CREATE UNIQUE INDEX XPKLogoImages ON LogoImages
+(PBLISRNO   ASC);
+
+COMMENT ON TABLE LogoImages IS 'LogoImages' ;
+
+COMMENT ON COLUMN LogoImages.PBLISRNO is '출판사번호' ;
+COMMENT ON COLUMN LogoImages.IMG_URL is 'IMG_URL' ;
+
+
+ALTER TABLE LogoImages
+ADD CONSTRAINT  XPKLogoImages PRIMARY KEY (PBLISRNO);
+
+ALTER TABLE LogoImages
+ADD 
+CONSTRAINT FK_PBLISRLOGO_LogoImages FOREIGN KEY (PBLISRNO) REFERENCES PBLISRLOGO (PBLISRNO);
+
+
+CREATE  TRIGGER tI_LogoImages BEFORE INSERT ON LogoImages for each row
+-- erwin Builtin Trigger
+-- INSERT trigger on LogoImages 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* PBLISRLOGO  LogoImages on child insert restrict */
+    /* ERWIN_RELATION:CHECKSUM="0000ff7d", PARENT_OWNER="", PARENT_TABLE="PBLISRLOGO"
+    CHILD_OWNER="", CHILD_TABLE="LogoImages"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_PBLISRLOGO_LogoImages", FK_COLUMNS="PBLISRNO" */
+    SELECT count(*) INTO NUMROWS
+      FROM PBLISRLOGO
+      WHERE
+        /* %JoinFKPK(:%New,PBLISRLOGO," = "," AND") */
+        :new.PBLISRNO = PBLISRLOGO.PBLISRNO;
+    IF (
+      /* %NotnullFK(:%New," IS NOT NULL AND") */
+      
+      NUMROWS = 0
+    )
+    THEN
+      raise_application_error(
+        -20002,
+        'Cannot insert LogoImages because PBLISRLOGO does not exist.'
+      );
+    END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tU_LogoImages AFTER UPDATE ON LogoImages for each row
+-- erwin Builtin Trigger
+-- UPDATE trigger on LogoImages 
+DECLARE NUMROWS INTEGER;
+BEGIN
+  /* erwin Builtin Trigger */
+  /* PBLISRLOGO  LogoImages on child update restrict */
+  /* ERWIN_RELATION:CHECKSUM="0000fe9a", PARENT_OWNER="", PARENT_TABLE="PBLISRLOGO"
+    CHILD_OWNER="", CHILD_TABLE="LogoImages"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_PBLISRLOGO_LogoImages", FK_COLUMNS="PBLISRNO" */
+  SELECT count(*) INTO NUMROWS
+    FROM PBLISRLOGO
+    WHERE
+      /* %JoinFKPK(:%New,PBLISRLOGO," = "," AND") */
+      :new.PBLISRNO = PBLISRLOGO.PBLISRNO;
+  IF (
+    /* %NotnullFK(:%New," IS NOT NULL AND") */
+    
+    NUMROWS = 0
+  )
+  THEN
+    raise_application_error(
+      -20007,
+      'Cannot update LogoImages because PBLISRLOGO does not exist.'
+    );
+  END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
