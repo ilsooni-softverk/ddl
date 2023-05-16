@@ -1,4 +1,22 @@
 
+CREATE TABLE "E_34"
+(
+	"a"                  CHAR(99999)  NOT NULL ,
+	"h"                  CHAR(99999)  NOT NULL 
+);
+
+CREATE UNIQUE INDEX "PK_E_34" ON "E_34"
+("a"   ASC);
+
+ALTER TABLE "E_34"
+	ADD  PRIMARY KEY ("a");
+
+COMMENT ON TABLE "E_34" IS 'E/34' ;
+
+COMMENT ON COLUMN "E_34"."a" is 'a' ;
+COMMENT ON COLUMN "E_34"."h" is 'h' ;
+
+
 CREATE TABLE "ORDERITM"
 (
 	"ORDERNO"            INTEGER  NOT NULL ,
