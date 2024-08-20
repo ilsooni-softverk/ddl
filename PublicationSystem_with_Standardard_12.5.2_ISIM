@@ -1,0 +1,3155 @@
+
+CREATE TABLE AddTeable
+(
+	a                    CHAR()  NOT NULL ,
+	b                    CHAR()  NULL 
+);
+
+CREATE UNIQUE INDEX XPKAddTeable ON AddTeable
+(a   ASC);
+
+ALTER TABLE AddTeable
+	ADD CONSTRAINT  XPKAddTeable PRIMARY KEY (a);
+
+CREATE TABLE AUT
+(
+	AUT_NO               VARCHAR2(20)  NOT NULL ,
+	AUT_NM               VARCHAR2(100)  NOT NULL ,
+	AUT_TELNO            VARCHAR2(11)  NULL ,
+	AUT_BSC_ADDR         VARCHAR2(200)  NOT NULL ,
+	AUT_DADDR            VARCHAR2(200)  NULL ,
+	AUT_ZIP              CHAR(5)  NOT NULL  CONSTRAINT  CK__authors__zip__79A81403_117508077 CHECK ([zip] like '[0-9][0-9][0-9][0-9][0-9]')
+);
+
+CREATE UNIQUE INDEX UPKCL_auidind ON AUT
+(AUT_NO   ASC);
+
+ALTER TABLE AUT
+	ADD CONSTRAINT  UPKCL_auidind PRIMARY KEY (AUT_NO);
+
+CREATE INDEX aunmind ON AUT
+(AUT_NM   ASC);
+
+CREATE TABLE AUT_BOOK
+(
+	AUT_NO               VARCHAR2(20)  NOT NULL ,
+	BOOK_NO              VARCHAR2(20)  NOT NULL ,
+	ANL_ACMLT_NTSL_AMT   DEC(15)  NULL ,
+	CRTR_YR              CHAR(4)  NOT NULL 
+);
+
+CREATE UNIQUE INDEX UPKCL_taind ON AUT_BOOK
+(AUT_NO   ASC,BOOK_NO   ASC,CRTR_YR   ASC);
+
+ALTER TABLE AUT_BOOK
+	ADD CONSTRAINT  UPKCL_taind PRIMARY KEY (AUT_NO,BOOK_NO,CRTR_YR);
+
+CREATE TABLE CUST
+(
+	CUST_NO              VARCHAR2(20)  NOT NULL ,
+	CUST_NM              VARCHAR2(100)  NOT NULL ,
+	CUST_BSC_ADDR        VARCHAR2(200)  NOT NULL ,
+	CUST_DADDR           VARCHAR2(200)  NULL ,
+	CUST_ZIP             CHAR(5)  NOT NULL  CONSTRAINT  CK__authors__zip__79A81403_150874749 CHECK ([zip] like '[0-9][0-9][0-9][0-9][0-9]'),
+	CUST_TELNO           VARCHAR2(11)  NOT NULL ,
+	CUST_FXNO            VARCHAR2(11)  NULL 
+);
+
+CREATE UNIQUE INDEX XPK고객 ON CUST
+(CUST_NO   ASC);
+
+ALTER TABLE CUST
+	ADD CONSTRAINT  XPK고객 PRIMARY KEY (CUST_NO);
+
+CREATE INDEX XIE1고객 ON CUST
+(CUST_NM   ASC);
+
+CREATE TABLE PBLRC
+(
+	PBLRC_NO             VARCHAR2(20)  NOT NULL ,
+	PBLRC_NM             VARCHAR2(100)  NOT NULL ,
+	PBLRC_BSC_ADDR       VARCHAR2(200)  NOT NULL ,
+	PBLRC_DADDR          VARCHAR2(200)  NULL ,
+	PBLRC_ZIP            CHAR(5)  NOT NULL  CONSTRAINT  CK__authors__zip__79A81403_1210790513 CHECK ([zip] like '[0-9][0-9][0-9][0-9][0-9]')
+);
+
+CREATE UNIQUE INDEX UPKCL_pubind ON PBLRC
+(PBLRC_NO   ASC);
+
+ALTER TABLE PBLRC
+	ADD CONSTRAINT  UPKCL_pubind PRIMARY KEY (PBLRC_NO);
+
+CREATE TABLE PBLRC_LGO
+(
+	PBLRC_NO             VARCHAR2(20)  NOT NULL ,
+	PBLRC_LGO_FILE_NM    VARCHAR2(300)  NULL ,
+	LGO_SE_CD            CHAR(3)  NOT NULL 
+);
+
+CREATE UNIQUE INDEX UPKCL_pubinfo ON PBLRC_LGO
+(PBLRC_NO   ASC,LGO_SE_CD   ASC);
+
+ALTER TABLE PBLRC_LGO
+	ADD CONSTRAINT  UPKCL_pubinfo PRIMARY KEY (PBLRC_NO,LGO_SE_CD);
+
+CREATE TABLE BOOK
+(
+	BOOK_NO              VARCHAR2(20)  NOT NULL ,
+	BOOK_NM              VARCHAR2(100)  NOT NULL ,
+	BOOK_SE_CD           CHAR(3)  DEFAULT 'UNDECIDED'  NOT NULL ,
+	PBLRC_NO             VARCHAR2(20)  NOT NULL ,
+	NTSL_PRC             DEC(15)  NOT NULL ,
+	PRCNT_AMT            DEC(15)  NOT NULL ,
+	RYTS_GIVE_BGNG_YMD   DATETIME  NOT NULL ,
+	BOOK_SMRY_CN         VARCHAR2(1000)  NULL ,
+	PBL_YMD              DATETIME  NOT NULL ,
+	ISBN                 VARCHAR2(13)  NULL ,
+	RYTS_GIVE_EXPRY_YMD  DATETIME  NULL 
+);
+
+CREATE UNIQUE INDEX UPKCL_titleidind ON BOOK
+(BOOK_NO   ASC);
+
+ALTER TABLE BOOK
+	ADD CONSTRAINT  UPKCL_titleidind PRIMARY KEY (BOOK_NO);
+
+CREATE INDEX titleind ON BOOK
+(BOOK_NM   ASC);
+
+CREATE TABLE CRCD
+(
+	CARD_NO              VARCHAR2(16)  NOT NULL ,
+	CARD_EXPRY_YMD       DATETIME  NOT NULL ,
+	CRCD_SE_CD           CHAR(3)  NOT NULL ,
+	CARD_CO_NM           VARCHAR2(100)  NOT NULL ,
+	CRCD_AMT             DEC(15)  NOT NULL ,
+	STLM_NO              VARCHAR2(20)  NOT NULL 
+);
+
+CREATE UNIQUE INDEX XPK신용카드 ON CRCD
+(STLM_NO   ASC);
+
+ALTER TABLE CRCD
+	ADD CONSTRAINT  XPK신용카드 PRIMARY KEY (STLM_NO);
+
+CREATE TABLE CRDT_CHK
+(
+	CRDT_INQ_NO          VARCHAR2(20)  NOT NULL ,
+	CRDT_INQ_YMD         DATETIME  NULL ,
+	CRDT_STTS_CD         CHAR(3)  NULL ,
+	STLM_NO              VARCHAR2(20)  NOT NULL ,
+	LAST_IDNTY_YMD       DATETIME  NULL 
+);
+
+CREATE UNIQUE INDEX XPK신용수표 ON CRDT_CHK
+(CRDT_INQ_NO   ASC);
+
+ALTER TABLE CRDT_CHK
+	ADD CONSTRAINT  XPK신용수표 PRIMARY KEY (CRDT_INQ_NO);
+
+CREATE TABLE DSCNT
+(
+	DSCNT_CD             CHAR(3)  NOT NULL ,
+	MIN_PRCHS_QTY        NUMBER(14)  NOT NULL ,
+	MAX_PRCHS_QTY        NUMBER(14)  NOT NULL ,
+	DSCNT_RT             NUMBER(5,2)  NOT NULL 
+);
+
+CREATE UNIQUE INDEX XPK할인 ON DSCNT
+(DSCNT_CD   ASC);
+
+ALTER TABLE DSCNT
+	ADD CONSTRAINT  XPK할인 PRIMARY KEY (DSCNT_CD);
+
+CREATE TABLE E_28
+(
+	a                    CHAR()  NOT NULL ,
+	b                    CHAR()  NULL 
+);
+
+CREATE UNIQUE INDEX XPKE_28 ON E_28
+(a   ASC);
+
+ALTER TABLE E_28
+	ADD CONSTRAINT  XPKE_28 PRIMARY KEY (a);
+
+CREATE TABLE JBTTL
+(
+	JBTTL_CD             CHAR(3)  NOT NULL ,
+	JBTTL_NM             VARCHAR2(100)  DEFAULT 'New Position - title not formalized yet'  NOT NULL ,
+	MIN_PY_CRTR_AMT      DEC(15)  NULL  CONSTRAINT  CK__jobs__min_lvl__1367E606 CHECK (MIN_PY_CRTR_AMT >= 10),
+	MAX_PY_CRTR_AMT      DEC(15)  NULL  CONSTRAINT  CK__jobs__max_lvl__145C0A3F CHECK (MAX_PY_CRTR_AMT <= 250)
+);
+
+CREATE UNIQUE INDEX PK__jobs__117F9D94 ON JBTTL
+(JBTTL_CD   ASC);
+
+ALTER TABLE JBTTL
+	ADD CONSTRAINT  PK__jobs__117F9D94 PRIMARY KEY (JBTTL_CD);
+
+CREATE TABLE EMP
+(
+	EMP_NO               VARCHAR2(20)  NOT NULL ,
+	EMP_NM               VARCHAR2(100)  NOT NULL ,
+	JBTTL_CD             CHAR(3)  NOT NULL ,
+	EMP_JBTTL_NM         VARCHAR2(100)  DEFAULT 10  NOT NULL ,
+	EMP_EMPMNT_YMD       DATETIME  NOT NULL ,
+	RRNO                 CHAR(13)  NOT NULL 
+);
+
+CREATE UNIQUE INDEX PK_emp_id ON EMP
+(EMP_NO   ASC);
+
+ALTER TABLE EMP
+	ADD CONSTRAINT  PK_emp_id PRIMARY KEY (EMP_NO);
+
+CREATE INDEX employee_ind ON EMP
+(EMP_NM   ASC);
+
+CREATE TABLE STR
+(
+	STR_NO               VARCHAR2(20)  NOT NULL ,
+	STR_NM               VARCHAR2(100)  NOT NULL ,
+	STR_BSC_ADDR         VARCHAR2(200)  NOT NULL ,
+	STR_DADDR            VARCHAR2(200)  NULL ,
+	STR_ZIP              CHAR(5)  NOT NULL  CONSTRAINT  CK__authors__zip__79A81403_167507494 CHECK ([zip] like '[0-9][0-9][0-9][0-9][0-9]'),
+	RGN_NO               VARCHAR2(20)  NOT NULL 
+);
+
+CREATE UNIQUE INDEX UPK_storeid ON STR
+(STR_NO   ASC);
+
+ALTER TABLE STR
+	ADD CONSTRAINT  UPK_storeid PRIMARY KEY (STR_NO);
+
+CREATE TABLE PRCHSORDR
+(
+	STR_NO               VARCHAR2(20)  NOT NULL ,
+	ORDR_NO              VARCHAR2(20)  NOT NULL ,
+	ORDR_YMD             DATETIME  NOT NULL ,
+	STLM_YMD             DATETIME  NOT NULL ,
+	CUST_NO              VARCHAR2(20)  NOT NULL 
+);
+
+CREATE UNIQUE INDEX UPKCL_sales ON PRCHSORDR
+(ORDR_NO   ASC);
+
+ALTER TABLE PRCHSORDR
+	ADD CONSTRAINT  UPKCL_sales PRIMARY KEY (ORDR_NO);
+
+CREATE TABLE ORDR_CMDTY
+(
+	ORDR_QTY             NUMBER(14)  NOT NULL ,
+	ORDR_NO              VARCHAR2(20)  NOT NULL ,
+	BOOK_NO              VARCHAR2(20)  NOT NULL ,
+	CMDTY_NO             VARCHAR2(20)  NOT NULL ,
+	DSCNT_CD             CHAR(3)  NOT NULL ,
+	ORDR_DSCNT_AMT       DEC(15)  NOT NULL ,
+	ORDR_AMT             DEC(15)  NOT NULL 
+);
+
+CREATE UNIQUE INDEX XPK주문물품 ON ORDR_CMDTY
+(ORDR_NO   ASC,CMDTY_NO   ASC);
+
+ALTER TABLE ORDR_CMDTY
+	ADD CONSTRAINT  XPK주문물품 PRIMARY KEY (ORDR_NO,CMDTY_NO);
+
+CREATE TABLE RGN
+(
+	RGN_NO               VARCHAR2(20)  NOT NULL ,
+	RGN_NM               VARCHAR2(40)  NOT NULL ,
+	RGN_EXPLNCN          VARCHAR2(1000)  NULL 
+);
+
+CREATE UNIQUE INDEX XPK지역 ON RGN
+(RGN_NO   ASC);
+
+ALTER TABLE RGN
+	ADD CONSTRAINT  XPK지역 PRIMARY KEY (RGN_NO);
+
+CREATE TABLE RYTS
+(
+	MIN_RYTS_GIVE_AMT    DEC(15)  NULL ,
+	MAX_RYTS_GIVE_AMT    DEC(15)  NULL ,
+	RYTS_AMT             DEC(15)  NOT NULL ,
+	RYTS_NO              VARCHAR2(20)  NOT NULL 
+);
+
+CREATE UNIQUE INDEX XPK인세 ON RYTS
+(RYTS_NO   ASC);
+
+ALTER TABLE RYTS
+	ADD CONSTRAINT  XPK인세 PRIMARY KEY (RYTS_NO);
+
+CREATE TABLE RYTS_STLM
+(
+	AUT_NO               VARCHAR2(20)  NOT NULL ,
+	BOOK_NO              VARCHAR2(20)  NOT NULL ,
+	RYTS_NO              VARCHAR2(20)  NOT NULL ,
+	STLM_YMD             DATETIME  NOT NULL ,
+	STLM_AMT             DEC(15)  NOT NULL ,
+	CRTR_YR              CHAR(4)  NOT NULL 
+);
+
+CREATE UNIQUE INDEX XPK인세결제 ON RYTS_STLM
+(AUT_NO   ASC,BOOK_NO   ASC,CRTR_YR   ASC,RYTS_NO   ASC);
+
+ALTER TABLE RYTS_STLM
+	ADD CONSTRAINT  XPK인세결제 PRIMARY KEY (AUT_NO,BOOK_NO,CRTR_YR,RYTS_NO);
+
+CREATE TABLE RYTS_HSTRY
+(
+	ORDR_NO              VARCHAR2(20)  NOT NULL ,
+	CMDTY_NO             VARCHAR2(20)  NOT NULL ,
+	RYTS_HSTRY_NO        VARCHAR2(20)  NOT NULL ,
+	RYTS_STLM_YMD        DATETIME  NOT NULL ,
+	RYTS_STLM_AMT        DEC(15)  NOT NULL ,
+	RYTS_ADDRSE_NM       VARCHAR2(100)  NOT NULL 
+);
+
+CREATE UNIQUE INDEX XPK인세이력 ON RYTS_HSTRY
+(RYTS_HSTRY_NO   ASC);
+
+ALTER TABLE RYTS_HSTRY
+	ADD CONSTRAINT  XPK인세이력 PRIMARY KEY (RYTS_HSTRY_NO);
+
+CREATE TABLE SNDBK_BOOK
+(
+	SNDBK_NO             VARCHAR2(20)  NOT NULL ,
+	ORDR_NO              VARCHAR2(20)  NOT NULL ,
+	CMDTY_NO             VARCHAR2(20)  NOT NULL ,
+	BOOK_SNDBK_YMD       DATETIME  NOT NULL 
+);
+
+CREATE UNIQUE INDEX XPK반송도서 ON SNDBK_BOOK
+(SNDBK_NO   ASC);
+
+ALTER TABLE SNDBK_BOOK
+	ADD CONSTRAINT  XPK반송도서 PRIMARY KEY (SNDBK_NO);
+
+CREATE TABLE ORDR_DLVY
+(
+	ORDR_DLVY_NO         VARCHAR2(20)  NOT NULL ,
+	WBILL_ADDR           VARCHAR2(200)  NOT NULL ,
+	CMDTY_SNDNG_ADDR     VARCHAR2(200)  NOT NULL ,
+	DLVY_STTS_CD         CHAR(3)  NOT NULL ,
+	DLVY_RSVT_YMD        DATETIME  NOT NULL ,
+	ORDR_NO              VARCHAR2(20)  NOT NULL ,
+	CMDTY_NO             VARCHAR2(20)  NOT NULL 
+);
+
+CREATE UNIQUE INDEX XPK주문배송 ON ORDR_DLVY
+(ORDR_DLVY_NO   ASC,ORDR_NO   ASC,CMDTY_NO   ASC);
+
+ALTER TABLE ORDR_DLVY
+	ADD CONSTRAINT  XPK주문배송 PRIMARY KEY (ORDR_DLVY_NO,ORDR_NO,CMDTY_NO);
+
+CREATE TABLE CROVR_ORDR
+(
+	DLVY_CROVR_YMD       DATETIME  NOT NULL ,
+	ORDR_DLVY_NO         VARCHAR2(20)  NOT NULL ,
+	ORDR_NO              VARCHAR2(20)  NOT NULL ,
+	CMDTY_NO             VARCHAR2(20)  NOT NULL 
+);
+
+CREATE UNIQUE INDEX XPK이월주문 ON CROVR_ORDR
+(ORDR_DLVY_NO   ASC,ORDR_NO   ASC,CMDTY_NO   ASC);
+
+ALTER TABLE CROVR_ORDR
+	ADD CONSTRAINT  XPK이월주문 PRIMARY KEY (ORDR_DLVY_NO,ORDR_NO,CMDTY_NO);
+
+CREATE TABLE PSNL_CHK
+(
+	CHK_NO               VARCHAR2(14)  NOT NULL ,
+	CHK_ACTNO            VARCHAR2(20)  NOT NULL ,
+	CHK_BANK_CD          CHAR(4)  NOT NULL ,
+	CHK_AMT              DEC(15)  NOT NULL ,
+	STLM_NO              VARCHAR2(20)  NOT NULL 
+);
+
+CREATE UNIQUE INDEX XPK개인수표 ON PSNL_CHK
+(STLM_NO   ASC);
+
+CREATE TABLE PSTMNORD
+(
+	PSTMNORD_NO          CHAR(11)  NOT NULL ,
+	PSTMNORD_AMT         DEC(15)  NOT NULL ,
+	STLM_NO              VARCHAR2(20)  NOT NULL 
+);
+
+CREATE UNIQUE INDEX XPK우편환 ON PSTMNORD
+(STLM_NO   ASC);
+
+CREATE TABLE STLM
+(
+	STLM_NO              VARCHAR2(20)  NOT NULL ,
+	STLM_YMD             DATETIME  NOT NULL ,
+	STLM_AMT             DEC(15)  NOT NULL ,
+	STLM_SE_CD           CHAR(3)  NOT NULL ,
+	addcol               CHAR()  NULL 
+);
+
+CREATE UNIQUE INDEX XPK결제 ON STLM
+(STLM_NO   ASC);
+
+ALTER TABLE STLM
+	ADD CONSTRAINT  XPK결제 PRIMARY KEY (STLM_NO);
+
+CREATE TABLE RPTP
+(
+	RPTP_NO              VARCHAR2(20)  NOT NULL ,
+	WRTR_NO              VARCHAR2(20)  NOT NULL ,
+	RPTP_NM              VARCHAR2(300)  NOT NULL ,
+	RPTP_FILE_NM         VARCHAR2(300)  NOT NULL 
+);
+
+CREATE UNIQUE INDEX XPK보고서 ON RPTP
+(RPTP_NO   ASC,WRTR_NO   ASC);
+
+ALTER TABLE RPTP
+	ADD CONSTRAINT  XPK보고서 PRIMARY KEY (RPTP_NO,WRTR_NO);
+
+CREATE VIEW titleview
+   (Book_Nam, Auth_Id, Auth_Lst_Nam, MRSP_Prc, Publshr_Id)
+AS SELECT
+   Book.Book_Nam, Auth.Auth_Id, Auth.Auth_Lst_Nam,
+   Book.MRSP_Prc, Book.Publshr_Id
+FROM Book, Auth, BookAuth
+;
+
+CREATE VIEW Order_View ( Store_Name,Order_Number,Order_Date,Book_Name,Order_Quantity,Order_Discount_Amount,Order_Price ) 
+	 AS  SELECT STR.STR_NM,PRCHSORDR.ORDR_NO,PRCHSORDR.ORDR_YMD,BOOK.BOOK_NM,ORDR_CMDTY.ORDR_QTY,ORDR_CMDTY.ORDR_DSCNT_AMT,ORDR_CMDTY.ORDR_AMT
+		FROM ORDR_CMDTY ,BOOK ,PRCHSORDR ,STR ;
+
+CREATE VIEW Publisher_View ( Employee_First_Name,Publisher_Name,Book_Name ) 
+	 AS  SELECT EMP.EMP_NM,PBLRC.PBLRC_NM,BOOK.BOOK_NM
+		FROM PBLRC ,BOOK ,EMP ;
+
+CREATE VIEW Payment_View ( Credit_Card_Number,Credit_Card_Amount,Money_Order_Number,Money_Order_Amount,Check_Number,Check_Amount,Customer_First_Name,Order_Number,Order_Date ) 
+	 AS  SELECT CRCD.CARD_NO,CRCD.CRCD_AMT,PSTMNORD.PSTMNORD_NO,PSTMNORD.PSTMNORD_AMT,PSNL_CHK.CHK_NO,PSNL_CHK.CHK_AMT,CUST.CUST_NM,PRCHSORDR.ORDR_NO,PRCHSORDR.ORDR_YMD
+		FROM PSTMNORD ,STLM ,CRCD ,PSNL_CHK ,CUST ,PRCHSORDR ;
+
+ALTER TABLE AUT_BOOK
+	ADD (
+CONSTRAINT FK_AUT_AUT_BOOK FOREIGN KEY (AUT_NO) REFERENCES AUT (AUT_NO));
+
+ALTER TABLE AUT_BOOK
+	ADD (
+CONSTRAINT FK_BOOK_AUT_BOOK FOREIGN KEY (BOOK_NO) REFERENCES BOOK (BOOK_NO));
+
+ALTER TABLE PBLRC_LGO
+	ADD (
+CONSTRAINT FK_PBLRC_PBLRC_LGO FOREIGN KEY (PBLRC_NO) REFERENCES PBLRC (PBLRC_NO));
+
+ALTER TABLE BOOK
+	ADD (
+CONSTRAINT FK_PBLRC_BOOK FOREIGN KEY (PBLRC_NO) REFERENCES PBLRC (PBLRC_NO));
+
+ALTER TABLE CRCD
+	ADD (
+CONSTRAINT FK_STLM_CRCD FOREIGN KEY (STLM_NO) REFERENCES STLM (STLM_NO) ON DELETE CASCADE);
+
+ALTER TABLE CRDT_CHK
+	ADD (
+CONSTRAINT FK_CRCD_CRDT_CHK FOREIGN KEY (STLM_NO) REFERENCES CRCD (STLM_NO));
+
+ALTER TABLE EMP
+	ADD (
+CONSTRAINT FK_JBTTL_EMP FOREIGN KEY (JBTTL_CD) REFERENCES JBTTL (JBTTL_CD));
+
+ALTER TABLE STR
+	ADD (
+CONSTRAINT FK_RGN_STR FOREIGN KEY (RGN_NO) REFERENCES RGN (RGN_NO) ON DELETE SET NULL);
+
+ALTER TABLE PRCHSORDR
+	ADD (
+CONSTRAINT FK_CUST_PRCHSORDR FOREIGN KEY (CUST_NO) REFERENCES CUST (CUST_NO) ON DELETE SET NULL);
+
+ALTER TABLE PRCHSORDR
+	ADD (
+CONSTRAINT FK_STR_PRCHSORDR FOREIGN KEY (STR_NO) REFERENCES STR (STR_NO));
+
+ALTER TABLE ORDR_CMDTY
+	ADD (
+CONSTRAINT FK_DSCNT_ORDR_CMDTY FOREIGN KEY (DSCNT_CD) REFERENCES DSCNT (DSCNT_CD) ON DELETE SET NULL);
+
+ALTER TABLE ORDR_CMDTY
+	ADD (
+CONSTRAINT FK_PRCHSORDR_ORDR_CMDTY FOREIGN KEY (ORDR_NO) REFERENCES PRCHSORDR (ORDR_NO));
+
+ALTER TABLE ORDR_CMDTY
+	ADD (
+CONSTRAINT FK_BOOK_ORDR_CMDTY FOREIGN KEY (BOOK_NO) REFERENCES BOOK (BOOK_NO));
+
+ALTER TABLE RYTS_STLM
+	ADD (
+CONSTRAINT FK_RYTS_RYTS_STLM FOREIGN KEY (RYTS_NO) REFERENCES RYTS (RYTS_NO));
+
+ALTER TABLE RYTS_STLM
+	ADD (
+CONSTRAINT FK_AUT_BOOK_RYTS_STLM FOREIGN KEY (AUT_NO, BOOK_NO, CRTR_YR) REFERENCES AUT_BOOK (AUT_NO, BOOK_NO, CRTR_YR));
+
+ALTER TABLE RYTS_HSTRY
+	ADD (
+CONSTRAINT FK_ORDR_CMDTY_RYTS_HSTRY FOREIGN KEY (ORDR_NO, CMDTY_NO) REFERENCES ORDR_CMDTY (ORDR_NO, CMDTY_NO) ON DELETE SET NULL);
+
+ALTER TABLE SNDBK_BOOK
+	ADD (
+CONSTRAINT FK_ORDR_CMDTY_SNDBK_BOOK FOREIGN KEY (ORDR_NO, CMDTY_NO) REFERENCES ORDR_CMDTY (ORDR_NO, CMDTY_NO) ON DELETE SET NULL);
+
+ALTER TABLE ORDR_DLVY
+	ADD (
+CONSTRAINT FK_ORDR_CMDTY_ORDR_DLVY FOREIGN KEY (ORDR_NO, CMDTY_NO) REFERENCES ORDR_CMDTY (ORDR_NO, CMDTY_NO));
+
+ALTER TABLE CROVR_ORDR
+	ADD (
+CONSTRAINT FK_ORDR_DLVY_CROVR_ORDR FOREIGN KEY (ORDR_DLVY_NO, ORDR_NO, CMDTY_NO) REFERENCES ORDR_DLVY (ORDR_DLVY_NO, ORDR_NO, CMDTY_NO));
+
+ALTER TABLE PSNL_CHK
+	ADD (
+CONSTRAINT FK_STLM_PSNL_CHK FOREIGN KEY (STLM_NO) REFERENCES STLM (STLM_NO) ON DELETE CASCADE);
+
+ALTER TABLE PSTMNORD
+	ADD (
+CONSTRAINT FK_STLM_PSTMNORD FOREIGN KEY (STLM_NO) REFERENCES STLM (STLM_NO) ON DELETE CASCADE);
+
+ALTER TABLE RPTP
+	ADD (
+CONSTRAINT FK_EMP_RPTP FOREIGN KEY (RPTP_NO) REFERENCES EMP (EMP_NO));
+
+ALTER TABLE RPTP
+	ADD (
+CONSTRAINT FK_EMP_RPTP FOREIGN KEY (WRTR_NO) REFERENCES EMP (EMP_NO));
+
+CREATE  PROCEDURE byroyalty 
+--   (<argument name> <in out nocopy> <argument datatype> <default value>)
+AS
+BEGIN
+   select au_id 
+   from titleauthor
+   where titleauthor.royaltyper = @percentage;
+END;
+/
+
+
+
+CREATE  PROCEDURE reptq1 
+--   (<argument name> <in out nocopy> <argument datatype> <default value>)
+AS
+BEGIN
+   select 
+	case when grouping(pub_id) = 1 then 'ALL' 
+             else pub_id end as pub_id, avg(price) as avg_price
+   from titles
+   where price is NOT NULL
+   group by pub_id with rollup
+   order by pub_id;
+END;
+/
+
+
+
+CREATE  PROCEDURE reptq2 
+--   (<argument name> <in out nocopy> <argument datatype> <default value>)
+AS
+BEGIN
+   select 
+      case when grouping(type) = 1 then 'ALL' 
+      else type end as type, 
+      case when grouping(pub_id) = 1 then 'ALL' 
+      else pub_id end as pub_id, avg(ytd_sales) as avg_ytd_sales
+   from titles
+   where pub_id is NOT NULL
+   group by pub_id, type with rollup;
+END;
+/
+
+
+
+CREATE  PROCEDURE reptq3x 
+--   (<argument name> <in out nocopy> <argument datatype> <default value>)
+AS
+BEGIN
+   select 
+      case when grouping(pub_id) = 1 then 'ALL' 
+      else pub_id end as pub_id, 
+      case when grouping(type) = 1 then 'ALL' 
+      else type end as type, count(title_id) as cnt
+   from titles
+   where price >@lolimit AND price <@hilimit AND 
+         type = @type OR type LIKE '%cook%'
+   group by pub_id, type with rollup;
+END;
+/
+
+
+
+
+CREATE  TRIGGER  tD_AUTHR_ AFTER DELETE ON AUT for each row
+-- erwin Builtin Trigger
+-- DELETE trigger on AUT 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* ERWIN9.AUT  ERWIN9.AUT_BOOK on parent delete no action */
+    /* ERWIN_RELATION:CHECKSUM="0000f510", PARENT_OWNER="ERWIN9", PARENT_TABLE="AUT"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="AUT_BOOK"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.AUT_ERWIN9.AUT_BOOK", FK_COLUMNS="AUT_NO" */
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.AUT_BOOK
+      WHERE
+        /*  %JoinFKPK(ERWIN9.AUT_BOOK,:%Old," = "," AND") */
+        ERWIN9.AUT_BOOK.AUT_NO = :old.AUT_NO;
+    IF (NUMROWS > 0)
+    THEN
+      raise_application_error(
+        -20001,
+        'Cannot DELETE ERWIN9.AUT because ERWIN9.AUT_BOOK exists.'
+      );
+    END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tU_AUTHR_ AFTER UPDATE ON AUT for each row
+-- erwin Builtin Trigger
+-- UPDATE trigger on AUT 
+DECLARE NUMROWS INTEGER;
+BEGIN
+  /* erwin Builtin Trigger */
+  /* ERWIN9.AUT  ERWIN9.AUT_BOOK on parent update no action */
+  /* ERWIN_RELATION:CHECKSUM="0001166d", PARENT_OWNER="ERWIN9", PARENT_TABLE="AUT"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="AUT_BOOK"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.AUT_ERWIN9.AUT_BOOK", FK_COLUMNS="AUT_NO" */
+  IF
+    /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
+    :old.AUT_NO <> :new.AUT_NO
+  THEN
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.AUT_BOOK
+      WHERE
+        /*  %JoinFKPK(ERWIN9.AUT_BOOK,:%Old," = "," AND") */
+        ERWIN9.AUT_BOOK.AUT_NO = :old.AUT_NO;
+    IF (NUMROWS > 0)
+    THEN 
+      raise_application_error(
+        -20005,
+        'Cannot update ERWIN9.AUT because ERWIN9.AUT_BOOK exists.'
+      );
+    END IF;
+  END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER  tD_AUTHR_ AFTER DELETE ON AUT_BOOK for each row
+-- erwin Builtin Trigger
+-- DELETE trigger on AUT_BOOK 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* ERWIN9.AUT_BOOK  ERWIN9.RYTS_STLM on parent delete restrict */
+    /* ERWIN_RELATION:CHECKSUM="00012886", PARENT_OWNER="ERWIN9", PARENT_TABLE="AUT_BOOK"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="RYTS_STLM"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.AUT_BOOK_ERWIN9.RYTS_STLM", FK_COLUMNS="AUT_NO""BOOK_NO""CRTR_YR" */
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.RYTS_STLM
+      WHERE
+        /*  %JoinFKPK(ERWIN9.RYTS_STLM,:%Old," = "," AND") */
+        ERWIN9.RYTS_STLM.AUT_NO = :old.AUT_NO AND
+        ERWIN9.RYTS_STLM.BOOK_NO = :old.BOOK_NO AND
+        ERWIN9.RYTS_STLM.CRTR_YR = :old.CRTR_YR;
+    IF (NUMROWS > 0)
+    THEN
+      raise_application_error(
+        -20001,
+        'Cannot delete ERWIN9.AUT_BOOK because ERWIN9.RYTS_STLM exists.'
+      );
+    END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tI_AUTHR_ BEFORE INSERT ON AUT_BOOK for each row
+-- erwin Builtin Trigger
+-- INSERT trigger on AUT_BOOK 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* ERWIN9.BOOK  ERWIN9.AUT_BOOK on child insert restrict */
+    /* ERWIN_RELATION:CHECKSUM="000220ac", PARENT_OWNER="ERWIN9", PARENT_TABLE="BOOK"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="AUT_BOOK"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.BOOK_ERWIN9.AUT_BOOK", FK_COLUMNS="BOOK_NO" */
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.BOOK
+      WHERE
+        /* %JoinFKPK(:%New,ERWIN9.BOOK," = "," AND") */
+        :new.BOOK_NO = ERWIN9.BOOK.BOOK_NO;
+    IF (
+      /* %NotnullFK(:%New," IS NOT NULL AND") */
+      
+      NUMROWS = 0
+    )
+    THEN
+      raise_application_error(
+        -20002,
+        'Cannot insert ERWIN9.AUT_BOOK because ERWIN9.BOOK does not exist.'
+      );
+    END IF;
+
+    /* erwin Builtin Trigger */
+    /* ERWIN9.AUT  ERWIN9.AUT_BOOK on child insert restrict */
+    /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="ERWIN9", PARENT_TABLE="AUT"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="AUT_BOOK"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.AUT_ERWIN9.AUT_BOOK", FK_COLUMNS="AUT_NO" */
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.AUT
+      WHERE
+        /* %JoinFKPK(:%New,ERWIN9.AUT," = "," AND") */
+        :new.AUT_NO = ERWIN9.AUT.AUT_NO;
+    IF (
+      /* %NotnullFK(:%New," IS NOT NULL AND") */
+      
+      NUMROWS = 0
+    )
+    THEN
+      raise_application_error(
+        -20002,
+        'Cannot insert ERWIN9.AUT_BOOK because ERWIN9.AUT does not exist.'
+      );
+    END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tU_AUTHR_ AFTER UPDATE ON AUT_BOOK for each row
+-- erwin Builtin Trigger
+-- UPDATE trigger on AUT_BOOK 
+DECLARE NUMROWS INTEGER;
+BEGIN
+  /* erwin Builtin Trigger */
+  /* ERWIN9.AUT_BOOK  ERWIN9.RYTS_STLM on parent update restrict */
+  /* ERWIN_RELATION:CHECKSUM="00039fb3", PARENT_OWNER="ERWIN9", PARENT_TABLE="AUT_BOOK"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="RYTS_STLM"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.AUT_BOOK_ERWIN9.RYTS_STLM", FK_COLUMNS="AUT_NO""BOOK_NO""CRTR_YR" */
+  IF
+    /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
+    :old.AUT_NO <> :new.AUT_NO OR 
+    :old.BOOK_NO <> :new.BOOK_NO OR 
+    :old.CRTR_YR <> :new.CRTR_YR
+  THEN
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.RYTS_STLM
+      WHERE
+        /*  %JoinFKPK(ERWIN9.RYTS_STLM,:%Old," = "," AND") */
+        ERWIN9.RYTS_STLM.AUT_NO = :old.AUT_NO AND
+        ERWIN9.RYTS_STLM.BOOK_NO = :old.BOOK_NO AND
+        ERWIN9.RYTS_STLM.CRTR_YR = :old.CRTR_YR;
+    IF (NUMROWS > 0)
+    THEN 
+      raise_application_error(
+        -20005,
+        'Cannot update ERWIN9.AUT_BOOK because ERWIN9.RYTS_STLM exists.'
+      );
+    END IF;
+  END IF;
+
+  /* erwin Builtin Trigger */
+  /* ERWIN9.BOOK  ERWIN9.AUT_BOOK on child update restrict */
+  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="ERWIN9", PARENT_TABLE="BOOK"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="AUT_BOOK"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.BOOK_ERWIN9.AUT_BOOK", FK_COLUMNS="BOOK_NO" */
+  SELECT count(*) INTO NUMROWS
+    FROM ERWIN9.BOOK
+    WHERE
+      /* %JoinFKPK(:%New,ERWIN9.BOOK," = "," AND") */
+      :new.BOOK_NO = ERWIN9.BOOK.BOOK_NO;
+  IF (
+    /* %NotnullFK(:%New," IS NOT NULL AND") */
+    
+    NUMROWS = 0
+  )
+  THEN
+    raise_application_error(
+      -20007,
+      'Cannot update ERWIN9.AUT_BOOK because ERWIN9.BOOK does not exist.'
+    );
+  END IF;
+
+  /* erwin Builtin Trigger */
+  /* ERWIN9.AUT  ERWIN9.AUT_BOOK on child update restrict */
+  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="ERWIN9", PARENT_TABLE="AUT"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="AUT_BOOK"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.AUT_ERWIN9.AUT_BOOK", FK_COLUMNS="AUT_NO" */
+  SELECT count(*) INTO NUMROWS
+    FROM ERWIN9.AUT
+    WHERE
+      /* %JoinFKPK(:%New,ERWIN9.AUT," = "," AND") */
+      :new.AUT_NO = ERWIN9.AUT.AUT_NO;
+  IF (
+    /* %NotnullFK(:%New," IS NOT NULL AND") */
+    
+    NUMROWS = 0
+  )
+  THEN
+    raise_application_error(
+      -20007,
+      'Cannot update ERWIN9.AUT_BOOK because ERWIN9.AUT does not exist.'
+    );
+  END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER  tD_CSTMR_ AFTER DELETE ON CUST for each row
+-- erwin Builtin Trigger
+-- DELETE trigger on CUST 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* ERWIN9.CUST  ERWIN9.PRCHSORDR on parent delete set null */
+    /* ERWIN_RELATION:CHECKSUM="0000d590", PARENT_OWNER="ERWIN9", PARENT_TABLE="CUST"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="PRCHSORDR"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.CUST_ERWIN9.PRCHSORDR", FK_COLUMNS="CUST_NO" */
+    UPDATE ERWIN9.PRCHSORDR
+      SET
+        /* %SetFK(ERWIN9.PRCHSORDR,NULL) */
+        ERWIN9.PRCHSORDR.CUST_NO = NULL
+      WHERE
+        /* %JoinFKPK(ERWIN9.PRCHSORDR,:%Old," = "," AND") */
+        ERWIN9.PRCHSORDR.CUST_NO = :old.CUST_NO;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tU_CSTMR_ AFTER UPDATE ON CUST for each row
+-- erwin Builtin Trigger
+-- UPDATE trigger on CUST 
+DECLARE NUMROWS INTEGER;
+BEGIN
+  /* ERWIN9.CUST  ERWIN9.PRCHSORDR on parent update set null */
+  /* ERWIN_RELATION:CHECKSUM="0000f851", PARENT_OWNER="ERWIN9", PARENT_TABLE="CUST"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="PRCHSORDR"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.CUST_ERWIN9.PRCHSORDR", FK_COLUMNS="CUST_NO" */
+  IF
+    /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
+    :old.CUST_NO <> :new.CUST_NO
+  THEN
+    UPDATE ERWIN9.PRCHSORDR
+      SET
+        /* %SetFK(ERWIN9.PRCHSORDR,NULL) */
+        ERWIN9.PRCHSORDR.CUST_NO = NULL
+      WHERE
+        /* %JoinFKPK(ERWIN9.PRCHSORDR,:%Old," = ",",") */
+        ERWIN9.PRCHSORDR.CUST_NO = :old.CUST_NO;
+  END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER  tD_PBLISR_ AFTER DELETE ON PBLRC for each row
+-- erwin Builtin Trigger
+-- DELETE trigger on PBLRC 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* ERWIN9.PBLRC  ERWIN9.PBLRC_LGO on parent delete no action */
+    /* ERWIN_RELATION:CHECKSUM="00021118", PARENT_OWNER="ERWIN9", PARENT_TABLE="PBLRC"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="PBLRC_LGO"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.PBLRC_ERWIN9.PBLRC_LGO", FK_COLUMNS="PBLRC_NO" */
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.PBLRC_LGO
+      WHERE
+        /*  %JoinFKPK(ERWIN9.PBLRC_LGO,:%Old," = "," AND") */
+        ERWIN9.PBLRC_LGO.PBLRC_NO = :old.PBLRC_NO;
+    IF (NUMROWS > 0)
+    THEN
+      raise_application_error(
+        -20001,
+        'Cannot DELETE ERWIN9.PBLRC because ERWIN9.PBLRC_LGO exists.'
+      );
+    END IF;
+
+    /* erwin Builtin Trigger */
+    /* ERWIN9.PBLRC  ERWIN9.BOOK on parent delete no action */
+    /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="ERWIN9", PARENT_TABLE="PBLRC"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="BOOK"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.PBLRC_ERWIN9.BOOK", FK_COLUMNS="PBLRC_NO" */
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.BOOK
+      WHERE
+        /*  %JoinFKPK(ERWIN9.BOOK,:%Old," = "," AND") */
+        ERWIN9.BOOK.PBLRC_NO = :old.PBLRC_NO;
+    IF (NUMROWS > 0)
+    THEN
+      raise_application_error(
+        -20001,
+        'Cannot DELETE ERWIN9.PBLRC because ERWIN9.BOOK exists.'
+      );
+    END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tU_PBLISR_ AFTER UPDATE ON PBLRC for each row
+-- erwin Builtin Trigger
+-- UPDATE trigger on PBLRC 
+DECLARE NUMROWS INTEGER;
+BEGIN
+  /* erwin Builtin Trigger */
+  /* ERWIN9.PBLRC  ERWIN9.PBLRC_LGO on parent update no action */
+  /* ERWIN_RELATION:CHECKSUM="00024e55", PARENT_OWNER="ERWIN9", PARENT_TABLE="PBLRC"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="PBLRC_LGO"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.PBLRC_ERWIN9.PBLRC_LGO", FK_COLUMNS="PBLRC_NO" */
+  IF
+    /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
+    :old.PBLRC_NO <> :new.PBLRC_NO
+  THEN
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.PBLRC_LGO
+      WHERE
+        /*  %JoinFKPK(ERWIN9.PBLRC_LGO,:%Old," = "," AND") */
+        ERWIN9.PBLRC_LGO.PBLRC_NO = :old.PBLRC_NO;
+    IF (NUMROWS > 0)
+    THEN 
+      raise_application_error(
+        -20005,
+        'Cannot update ERWIN9.PBLRC because ERWIN9.PBLRC_LGO exists.'
+      );
+    END IF;
+  END IF;
+
+  /* erwin Builtin Trigger */
+  /* ERWIN9.PBLRC  ERWIN9.BOOK on parent update no action */
+  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="ERWIN9", PARENT_TABLE="PBLRC"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="BOOK"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.PBLRC_ERWIN9.BOOK", FK_COLUMNS="PBLRC_NO" */
+  IF
+    /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
+    :old.PBLRC_NO <> :new.PBLRC_NO
+  THEN
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.BOOK
+      WHERE
+        /*  %JoinFKPK(ERWIN9.BOOK,:%Old," = "," AND") */
+        ERWIN9.BOOK.PBLRC_NO = :old.PBLRC_NO;
+    IF (NUMROWS > 0)
+    THEN 
+      raise_application_error(
+        -20005,
+        'Cannot update ERWIN9.PBLRC because ERWIN9.BOOK exists.'
+      );
+    END IF;
+  END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tI_PBLISR_LOGO_ BEFORE INSERT ON PBLRC_LGO for each row
+-- erwin Builtin Trigger
+-- INSERT trigger on PBLRC_LGO 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* ERWIN9.PBLRC  ERWIN9.PBLRC_LGO on child insert restrict */
+    /* ERWIN_RELATION:CHECKSUM="00010890", PARENT_OWNER="ERWIN9", PARENT_TABLE="PBLRC"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="PBLRC_LGO"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.PBLRC_ERWIN9.PBLRC_LGO", FK_COLUMNS="PBLRC_NO" */
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.PBLRC
+      WHERE
+        /* %JoinFKPK(:%New,ERWIN9.PBLRC," = "," AND") */
+        :new.PBLRC_NO = ERWIN9.PBLRC.PBLRC_NO;
+    IF (
+      /* %NotnullFK(:%New," IS NOT NULL AND") */
+      
+      NUMROWS = 0
+    )
+    THEN
+      raise_application_error(
+        -20002,
+        'Cannot insert ERWIN9.PBLRC_LGO because ERWIN9.PBLRC does not exist.'
+      );
+    END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tU_PBLISR_LOGO_ AFTER UPDATE ON PBLRC_LGO for each row
+-- erwin Builtin Trigger
+-- UPDATE trigger on PBLRC_LGO 
+DECLARE NUMROWS INTEGER;
+BEGIN
+  /* erwin Builtin Trigger */
+  /* ERWIN9.PBLRC  ERWIN9.PBLRC_LGO on child update restrict */
+  /* ERWIN_RELATION:CHECKSUM="00010c69", PARENT_OWNER="ERWIN9", PARENT_TABLE="PBLRC"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="PBLRC_LGO"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.PBLRC_ERWIN9.PBLRC_LGO", FK_COLUMNS="PBLRC_NO" */
+  SELECT count(*) INTO NUMROWS
+    FROM ERWIN9.PBLRC
+    WHERE
+      /* %JoinFKPK(:%New,ERWIN9.PBLRC," = "," AND") */
+      :new.PBLRC_NO = ERWIN9.PBLRC.PBLRC_NO;
+  IF (
+    /* %NotnullFK(:%New," IS NOT NULL AND") */
+    
+    NUMROWS = 0
+  )
+  THEN
+    raise_application_error(
+      -20007,
+      'Cannot update ERWIN9.PBLRC_LGO because ERWIN9.PBLRC does not exist.'
+    );
+  END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER  tD_BOOK_ AFTER DELETE ON BOOK for each row
+-- erwin Builtin Trigger
+-- DELETE trigger on BOOK 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* ERWIN9.BOOK  ERWIN9.AUT_BOOK on parent delete no action */
+    /* ERWIN_RELATION:CHECKSUM="0001fac9", PARENT_OWNER="ERWIN9", PARENT_TABLE="BOOK"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="AUT_BOOK"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.BOOK_ERWIN9.AUT_BOOK", FK_COLUMNS="BOOK_NO" */
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.AUT_BOOK
+      WHERE
+        /*  %JoinFKPK(ERWIN9.AUT_BOOK,:%Old," = "," AND") */
+        ERWIN9.AUT_BOOK.BOOK_NO = :old.BOOK_NO;
+    IF (NUMROWS > 0)
+    THEN
+      raise_application_error(
+        -20001,
+        'Cannot DELETE ERWIN9.BOOK because ERWIN9.AUT_BOOK exists.'
+      );
+    END IF;
+
+    /* erwin Builtin Trigger */
+    /* ERWIN9.BOOK  ERWIN9.ORDR_CMDTY on parent delete restrict */
+    /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="ERWIN9", PARENT_TABLE="BOOK"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="ORDR_CMDTY"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.BOOK_ERWIN9.ORDR_CMDTY", FK_COLUMNS="BOOK_NO" */
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.ORDR_CMDTY
+      WHERE
+        /*  %JoinFKPK(ERWIN9.ORDR_CMDTY,:%Old," = "," AND") */
+        ERWIN9.ORDR_CMDTY.BOOK_NO = :old.BOOK_NO;
+    IF (NUMROWS > 0)
+    THEN
+      raise_application_error(
+        -20001,
+        'Cannot delete ERWIN9.BOOK because ERWIN9.ORDR_CMDTY exists.'
+      );
+    END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tI_BOOK_ BEFORE INSERT ON BOOK for each row
+-- erwin Builtin Trigger
+-- INSERT trigger on BOOK 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* ERWIN9.PBLRC  ERWIN9.BOOK on child insert set null */
+    /* ERWIN_RELATION:CHECKSUM="0000f53f", PARENT_OWNER="ERWIN9", PARENT_TABLE="PBLRC"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="BOOK"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.PBLRC_ERWIN9.BOOK", FK_COLUMNS="PBLRC_NO" */
+    UPDATE ERWIN9.BOOK
+      SET
+        /* %SetFK(ERWIN9.BOOK,NULL) */
+        ERWIN9.BOOK.PBLRC_NO = NULL
+      WHERE
+        NOT EXISTS (
+          SELECT * FROM ERWIN9.PBLRC
+            WHERE
+              /* %JoinFKPK(:%New,ERWIN9.PBLRC," = "," AND") */
+              :new.PBLRC_NO = ERWIN9.PBLRC.PBLRC_NO
+        ) 
+        /* %JoinPKPK(ERWIN9.BOOK,:%New," = "," AND") */
+         and ERWIN9.BOOK.BOOK_NO = :new.BOOK_NO;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tU_BOOK_ AFTER UPDATE ON BOOK for each row
+-- erwin Builtin Trigger
+-- UPDATE trigger on BOOK 
+DECLARE NUMROWS INTEGER;
+BEGIN
+  /* erwin Builtin Trigger */
+  /* ERWIN9.BOOK  ERWIN9.AUT_BOOK on parent update no action */
+  /* ERWIN_RELATION:CHECKSUM="000381d3", PARENT_OWNER="ERWIN9", PARENT_TABLE="BOOK"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="AUT_BOOK"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.BOOK_ERWIN9.AUT_BOOK", FK_COLUMNS="BOOK_NO" */
+  IF
+    /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
+    :old.BOOK_NO <> :new.BOOK_NO
+  THEN
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.AUT_BOOK
+      WHERE
+        /*  %JoinFKPK(ERWIN9.AUT_BOOK,:%Old," = "," AND") */
+        ERWIN9.AUT_BOOK.BOOK_NO = :old.BOOK_NO;
+    IF (NUMROWS > 0)
+    THEN 
+      raise_application_error(
+        -20005,
+        'Cannot update ERWIN9.BOOK because ERWIN9.AUT_BOOK exists.'
+      );
+    END IF;
+  END IF;
+
+  /* erwin Builtin Trigger */
+  /* ERWIN9.BOOK  ERWIN9.ORDR_CMDTY on parent update restrict */
+  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="ERWIN9", PARENT_TABLE="BOOK"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="ORDR_CMDTY"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.BOOK_ERWIN9.ORDR_CMDTY", FK_COLUMNS="BOOK_NO" */
+  IF
+    /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
+    :old.BOOK_NO <> :new.BOOK_NO
+  THEN
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.ORDR_CMDTY
+      WHERE
+        /*  %JoinFKPK(ERWIN9.ORDR_CMDTY,:%Old," = "," AND") */
+        ERWIN9.ORDR_CMDTY.BOOK_NO = :old.BOOK_NO;
+    IF (NUMROWS > 0)
+    THEN 
+      raise_application_error(
+        -20005,
+        'Cannot update ERWIN9.BOOK because ERWIN9.ORDR_CMDTY exists.'
+      );
+    END IF;
+  END IF;
+
+  /* erwin Builtin Trigger */
+  /* ERWIN9.PBLRC  ERWIN9.BOOK on child update no action */
+  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="ERWIN9", PARENT_TABLE="PBLRC"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="BOOK"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.PBLRC_ERWIN9.BOOK", FK_COLUMNS="PBLRC_NO" */
+  SELECT count(*) INTO NUMROWS
+    FROM ERWIN9.PBLRC
+    WHERE
+      /* %JoinFKPK(:%New,ERWIN9.PBLRC," = "," AND") */
+      :new.PBLRC_NO = ERWIN9.PBLRC.PBLRC_NO;
+  IF (
+    /* %NotnullFK(:%New," IS NOT NULL AND") */
+    :new.PBLRC_NO IS NOT NULL AND
+    NUMROWS = 0
+  )
+  THEN
+    raise_application_error(
+      -20007,
+      'Cannot update ERWIN9.BOOK because ERWIN9.PBLRC does not exist.'
+    );
+  END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER  tD_CRDIT_CARD_ AFTER DELETE ON CRCD for each row
+-- erwin Builtin Trigger
+-- DELETE trigger on CRCD 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* ERWIN9.CRCD  ERWIN9.CRDT_CHK on parent delete restrict */
+    /* ERWIN_RELATION:CHECKSUM="0000f104", PARENT_OWNER="ERWIN9", PARENT_TABLE="CRCD"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="CRDT_CHK"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.CRCD_ERWIN9.CRDT_CHK", FK_COLUMNS="STLM_NO" */
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.CRDT_CHK
+      WHERE
+        /*  %JoinFKPK(ERWIN9.CRDT_CHK,:%Old," = "," AND") */
+        ERWIN9.CRDT_CHK.STLM_NO = :old.STLM_NO;
+    IF (NUMROWS > 0)
+    THEN
+      raise_application_error(
+        -20001,
+        'Cannot delete ERWIN9.CRCD because ERWIN9.CRDT_CHK exists.'
+      );
+    END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tU_CRDIT_CARD_ AFTER UPDATE ON CRCD for each row
+-- erwin Builtin Trigger
+-- UPDATE trigger on CRCD 
+DECLARE NUMROWS INTEGER;
+BEGIN
+  /* erwin Builtin Trigger */
+  /* ERWIN9.CRCD  ERWIN9.CRDT_CHK on parent update restrict */
+  /* ERWIN_RELATION:CHECKSUM="00011707", PARENT_OWNER="ERWIN9", PARENT_TABLE="CRCD"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="CRDT_CHK"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.CRCD_ERWIN9.CRDT_CHK", FK_COLUMNS="STLM_NO" */
+  IF
+    /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
+    :old.STLM_NO <> :new.STLM_NO
+  THEN
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.CRDT_CHK
+      WHERE
+        /*  %JoinFKPK(ERWIN9.CRDT_CHK,:%Old," = "," AND") */
+        ERWIN9.CRDT_CHK.STLM_NO = :old.STLM_NO;
+    IF (NUMROWS > 0)
+    THEN 
+      raise_application_error(
+        -20005,
+        'Cannot update ERWIN9.CRCD because ERWIN9.CRDT_CHK exists.'
+      );
+    END IF;
+  END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tI_CRDIT_CHK_ BEFORE INSERT ON CRDT_CHK for each row
+-- erwin Builtin Trigger
+-- INSERT trigger on CRDT_CHK 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* ERWIN9.CRCD  ERWIN9.CRDT_CHK on child insert restrict */
+    /* ERWIN_RELATION:CHECKSUM="000101a5", PARENT_OWNER="ERWIN9", PARENT_TABLE="CRCD"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="CRDT_CHK"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.CRCD_ERWIN9.CRDT_CHK", FK_COLUMNS="STLM_NO" */
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.CRCD
+      WHERE
+        /* %JoinFKPK(:%New,ERWIN9.CRCD," = "," AND") */
+        :new.STLM_NO = ERWIN9.CRCD.STLM_NO;
+    IF (
+      /* %NotnullFK(:%New," IS NOT NULL AND") */
+      
+      NUMROWS = 0
+    )
+    THEN
+      raise_application_error(
+        -20002,
+        'Cannot insert ERWIN9.CRDT_CHK because ERWIN9.CRCD does not exist.'
+      );
+    END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tU_CRDIT_CHK_ AFTER UPDATE ON CRDT_CHK for each row
+-- erwin Builtin Trigger
+-- UPDATE trigger on CRDT_CHK 
+DECLARE NUMROWS INTEGER;
+BEGIN
+  /* erwin Builtin Trigger */
+  /* ERWIN9.CRCD  ERWIN9.CRDT_CHK on child update restrict */
+  /* ERWIN_RELATION:CHECKSUM="00010557", PARENT_OWNER="ERWIN9", PARENT_TABLE="CRCD"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="CRDT_CHK"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.CRCD_ERWIN9.CRDT_CHK", FK_COLUMNS="STLM_NO" */
+  SELECT count(*) INTO NUMROWS
+    FROM ERWIN9.CRCD
+    WHERE
+      /* %JoinFKPK(:%New,ERWIN9.CRCD," = "," AND") */
+      :new.STLM_NO = ERWIN9.CRCD.STLM_NO;
+  IF (
+    /* %NotnullFK(:%New," IS NOT NULL AND") */
+    
+    NUMROWS = 0
+  )
+  THEN
+    raise_application_error(
+      -20007,
+      'Cannot update ERWIN9.CRDT_CHK because ERWIN9.CRCD does not exist.'
+    );
+  END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER  tD_DSCNT_ AFTER DELETE ON DSCNT for each row
+-- erwin Builtin Trigger
+-- DELETE trigger on DSCNT 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* ERWIN9.DSCNT  ERWIN9.ORDR_CMDTY on parent delete set null */
+    /* ERWIN_RELATION:CHECKSUM="0000db24", PARENT_OWNER="ERWIN9", PARENT_TABLE="DSCNT"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="ORDR_CMDTY"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.DSCNT_ERWIN9.ORDR_CMDTY", FK_COLUMNS="DSCNT_CD" */
+    UPDATE ERWIN9.ORDR_CMDTY
+      SET
+        /* %SetFK(ERWIN9.ORDR_CMDTY,NULL) */
+        ERWIN9.ORDR_CMDTY.DSCNT_CD = NULL
+      WHERE
+        /* %JoinFKPK(ERWIN9.ORDR_CMDTY,:%Old," = "," AND") */
+        ERWIN9.ORDR_CMDTY.DSCNT_CD = :old.DSCNT_CD;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tU_DSCNT_ AFTER UPDATE ON DSCNT for each row
+-- erwin Builtin Trigger
+-- UPDATE trigger on DSCNT 
+DECLARE NUMROWS INTEGER;
+BEGIN
+  /* ERWIN9.DSCNT  ERWIN9.ORDR_CMDTY on parent update set null */
+  /* ERWIN_RELATION:CHECKSUM="000101d0", PARENT_OWNER="ERWIN9", PARENT_TABLE="DSCNT"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="ORDR_CMDTY"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.DSCNT_ERWIN9.ORDR_CMDTY", FK_COLUMNS="DSCNT_CD" */
+  IF
+    /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
+    :old.DSCNT_CD <> :new.DSCNT_CD
+  THEN
+    UPDATE ERWIN9.ORDR_CMDTY
+      SET
+        /* %SetFK(ERWIN9.ORDR_CMDTY,NULL) */
+        ERWIN9.ORDR_CMDTY.DSCNT_CD = NULL
+      WHERE
+        /* %JoinFKPK(ERWIN9.ORDR_CMDTY,:%Old," = ",",") */
+        ERWIN9.ORDR_CMDTY.DSCNT_CD = :old.DSCNT_CD;
+  END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER  tD_JOB_TITLE_ AFTER DELETE ON JBTTL for each row
+-- erwin Builtin Trigger
+-- DELETE trigger on JBTTL 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* ERWIN9.JBTTL  ERWIN9.EMP on parent delete no action */
+    /* ERWIN_RELATION:CHECKSUM="0000f003", PARENT_OWNER="ERWIN9", PARENT_TABLE="JBTTL"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="EMP"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.JBTTL_ERWIN9.EMP", FK_COLUMNS="JBTTL_CD" */
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.EMP
+      WHERE
+        /*  %JoinFKPK(ERWIN9.EMP,:%Old," = "," AND") */
+        ERWIN9.EMP.JBTTL_CD = :old.JBTTL_CD;
+    IF (NUMROWS > 0)
+    THEN
+      raise_application_error(
+        -20001,
+        'Cannot DELETE ERWIN9.JBTTL because ERWIN9.EMP exists.'
+      );
+    END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tU_JOB_TITLE_ AFTER UPDATE ON JBTTL for each row
+-- erwin Builtin Trigger
+-- UPDATE trigger on JBTTL 
+DECLARE NUMROWS INTEGER;
+BEGIN
+  /* erwin Builtin Trigger */
+  /* ERWIN9.JBTTL  ERWIN9.EMP on parent update no action */
+  /* ERWIN_RELATION:CHECKSUM="00010ca6", PARENT_OWNER="ERWIN9", PARENT_TABLE="JBTTL"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="EMP"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.JBTTL_ERWIN9.EMP", FK_COLUMNS="JBTTL_CD" */
+  IF
+    /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
+    :old.JBTTL_CD <> :new.JBTTL_CD
+  THEN
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.EMP
+      WHERE
+        /*  %JoinFKPK(ERWIN9.EMP,:%Old," = "," AND") */
+        ERWIN9.EMP.JBTTL_CD = :old.JBTTL_CD;
+    IF (NUMROWS > 0)
+    THEN 
+      raise_application_error(
+        -20005,
+        'Cannot update ERWIN9.JBTTL because ERWIN9.EMP exists.'
+      );
+    END IF;
+  END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER employee_insupd
+  AFTER INSERT OR UPDATE
+  ON EMP
+  
+  
+  
+
+--Get the range of level for this job type from the jobs table.
+declare Xmin_lvl smallint;
+        Xmax_lvl smallint;
+        Xemp_lvl smallint;
+        Xjob_id  smallint;
+
+Begin
+   select Xmin_lvl = min_lvl,
+      Xmax_lvl = max_lvl,
+      Xemp_lvl = i.job_lvl,
+      Xjob_id = i.job_id
+   from employee e, jobs j, inserted i
+   where e.emp_id = i.emp_id AND i.job_id = j.job_id;
+
+   IF (Xjob_id = 1) and (Xemp_lvl <> 10) then
+      raise_application_error (-20001, 
+      'Job id 1 expects the default level of 10.');
+   ELSE
+      IF NOT (Xemp_lvl BETWEEN Xmin_lvl AND Xmax_lvl) then
+         raise_application_error (-20002, 
+         'The level for job_id:%d should be between %d and %d.', 
+         Xjob_id, Xmin_lvl, Xmax_lvl);
+      end if;
+   end if;
+END;
+/
+
+
+
+ALTER TRIGGER employee_insupd
+	ENABLE;
+
+
+CREATE  TRIGGER  tD_EMPLY_ AFTER DELETE ON EMP for each row
+-- erwin Builtin Trigger
+-- DELETE trigger on EMP 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* ERWIN9.EMP  ERWIN9.RPTP on parent delete restrict */
+    /* ERWIN_RELATION:CHECKSUM="0001decb", PARENT_OWNER="ERWIN9", PARENT_TABLE="EMP"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="RPTP"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.EMP_ERWIN9.RPTP", FK_COLUMNS="WRTR_NO" */
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.RPTP
+      WHERE
+        /*  %JoinFKPK(ERWIN9.RPTP,:%Old," = "," AND") */
+        ERWIN9.RPTP.WRTR_NO = :old.EMP_NO;
+    IF (NUMROWS > 0)
+    THEN
+      raise_application_error(
+        -20001,
+        'Cannot delete ERWIN9.EMP because ERWIN9.RPTP exists.'
+      );
+    END IF;
+
+    /* erwin Builtin Trigger */
+    /* ERWIN9.EMP  ERWIN9.RPTP on parent delete restrict */
+    /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="ERWIN9", PARENT_TABLE="EMP"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="RPTP"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.EMP_ERWIN9.RPTP", FK_COLUMNS="RPTP_NO" */
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.RPTP
+      WHERE
+        /*  %JoinFKPK(ERWIN9.RPTP,:%Old," = "," AND") */
+        ERWIN9.RPTP.RPTP_NO = :old.EMP_NO;
+    IF (NUMROWS > 0)
+    THEN
+      raise_application_error(
+        -20001,
+        'Cannot delete ERWIN9.EMP because ERWIN9.RPTP exists.'
+      );
+    END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tI_EMPLY_ BEFORE INSERT ON EMP for each row
+-- erwin Builtin Trigger
+-- INSERT trigger on EMP 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* ERWIN9.JBTTL  ERWIN9.EMP on child insert restrict */
+    /* ERWIN_RELATION:CHECKSUM="00010047", PARENT_OWNER="ERWIN9", PARENT_TABLE="JBTTL"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="EMP"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.JBTTL_ERWIN9.EMP", FK_COLUMNS="JBTTL_CD" */
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.JBTTL
+      WHERE
+        /* %JoinFKPK(:%New,ERWIN9.JBTTL," = "," AND") */
+        :new.JBTTL_CD = ERWIN9.JBTTL.JBTTL_CD;
+    IF (
+      /* %NotnullFK(:%New," IS NOT NULL AND") */
+      
+      NUMROWS = 0
+    )
+    THEN
+      raise_application_error(
+        -20002,
+        'Cannot insert ERWIN9.EMP because ERWIN9.JBTTL does not exist.'
+      );
+    END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tU_EMPLY_ AFTER UPDATE ON EMP for each row
+-- erwin Builtin Trigger
+-- UPDATE trigger on EMP 
+DECLARE NUMROWS INTEGER;
+BEGIN
+  /* erwin Builtin Trigger */
+  /* ERWIN9.EMP  ERWIN9.RPTP on parent update restrict */
+  /* ERWIN_RELATION:CHECKSUM="00033cea", PARENT_OWNER="ERWIN9", PARENT_TABLE="EMP"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="RPTP"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.EMP_ERWIN9.RPTP", FK_COLUMNS="WRTR_NO" */
+  IF
+    /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
+    :old.EMP_NO <> :new.EMP_NO
+  THEN
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.RPTP
+      WHERE
+        /*  %JoinFKPK(ERWIN9.RPTP,:%Old," = "," AND") */
+        ERWIN9.RPTP.WRTR_NO = :old.EMP_NO;
+    IF (NUMROWS > 0)
+    THEN 
+      raise_application_error(
+        -20005,
+        'Cannot update ERWIN9.EMP because ERWIN9.RPTP exists.'
+      );
+    END IF;
+  END IF;
+
+  /* erwin Builtin Trigger */
+  /* ERWIN9.EMP  ERWIN9.RPTP on parent update restrict */
+  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="ERWIN9", PARENT_TABLE="EMP"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="RPTP"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.EMP_ERWIN9.RPTP", FK_COLUMNS="RPTP_NO" */
+  IF
+    /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
+    :old.EMP_NO <> :new.EMP_NO
+  THEN
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.RPTP
+      WHERE
+        /*  %JoinFKPK(ERWIN9.RPTP,:%Old," = "," AND") */
+        ERWIN9.RPTP.RPTP_NO = :old.EMP_NO;
+    IF (NUMROWS > 0)
+    THEN 
+      raise_application_error(
+        -20005,
+        'Cannot update ERWIN9.EMP because ERWIN9.RPTP exists.'
+      );
+    END IF;
+  END IF;
+
+  /* erwin Builtin Trigger */
+  /* ERWIN9.JBTTL  ERWIN9.EMP on child update restrict */
+  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="ERWIN9", PARENT_TABLE="JBTTL"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="EMP"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.JBTTL_ERWIN9.EMP", FK_COLUMNS="JBTTL_CD" */
+  SELECT count(*) INTO NUMROWS
+    FROM ERWIN9.JBTTL
+    WHERE
+      /* %JoinFKPK(:%New,ERWIN9.JBTTL," = "," AND") */
+      :new.JBTTL_CD = ERWIN9.JBTTL.JBTTL_CD;
+  IF (
+    /* %NotnullFK(:%New," IS NOT NULL AND") */
+    
+    NUMROWS = 0
+  )
+  THEN
+    raise_application_error(
+      -20007,
+      'Cannot update ERWIN9.EMP because ERWIN9.JBTTL does not exist.'
+    );
+  END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER  tD_STR_NM_ AFTER DELETE ON STR for each row
+-- erwin Builtin Trigger
+-- DELETE trigger on STR 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* ERWIN9.STR  ERWIN9.PRCHSORDR on parent delete no action */
+    /* ERWIN_RELATION:CHECKSUM="0001000d", PARENT_OWNER="ERWIN9", PARENT_TABLE="STR"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="PRCHSORDR"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.STR_ERWIN9.PRCHSORDR", FK_COLUMNS="STR_NO" */
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.PRCHSORDR
+      WHERE
+        /*  %JoinFKPK(ERWIN9.PRCHSORDR,:%Old," = "," AND") */
+        ERWIN9.PRCHSORDR.STR_NO = :old.STR_NO;
+    IF (NUMROWS > 0)
+    THEN
+      raise_application_error(
+        -20001,
+        'Cannot DELETE ERWIN9.STR because ERWIN9.PRCHSORDR exists.'
+      );
+    END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tI_STR_NM_ BEFORE INSERT ON STR for each row
+-- erwin Builtin Trigger
+-- INSERT trigger on STR 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* ERWIN9.RGN  ERWIN9.STR on child insert set null */
+    /* ERWIN_RELATION:CHECKSUM="0000ec76", PARENT_OWNER="ERWIN9", PARENT_TABLE="RGN"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="STR"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.RGN_ERWIN9.STR", FK_COLUMNS="RGN_NO" */
+    UPDATE ERWIN9.STR
+      SET
+        /* %SetFK(ERWIN9.STR,NULL) */
+        ERWIN9.STR.RGN_NO = NULL
+      WHERE
+        NOT EXISTS (
+          SELECT * FROM ERWIN9.RGN
+            WHERE
+              /* %JoinFKPK(:%New,ERWIN9.RGN," = "," AND") */
+              :new.RGN_NO = ERWIN9.RGN.RGN_NO
+        ) 
+        /* %JoinPKPK(ERWIN9.STR,:%New," = "," AND") */
+         and ERWIN9.STR.STR_NO = :new.STR_NO;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tU_STR_NM_ AFTER UPDATE ON STR for each row
+-- erwin Builtin Trigger
+-- UPDATE trigger on STR 
+DECLARE NUMROWS INTEGER;
+BEGIN
+  /* erwin Builtin Trigger */
+  /* ERWIN9.STR  ERWIN9.PRCHSORDR on parent update no action */
+  /* ERWIN_RELATION:CHECKSUM="0002325f", PARENT_OWNER="ERWIN9", PARENT_TABLE="STR"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="PRCHSORDR"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.STR_ERWIN9.PRCHSORDR", FK_COLUMNS="STR_NO" */
+  IF
+    /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
+    :old.STR_NO <> :new.STR_NO
+  THEN
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.PRCHSORDR
+      WHERE
+        /*  %JoinFKPK(ERWIN9.PRCHSORDR,:%Old," = "," AND") */
+        ERWIN9.PRCHSORDR.STR_NO = :old.STR_NO;
+    IF (NUMROWS > 0)
+    THEN 
+      raise_application_error(
+        -20005,
+        'Cannot update ERWIN9.STR because ERWIN9.PRCHSORDR exists.'
+      );
+    END IF;
+  END IF;
+
+  /* erwin Builtin Trigger */
+  /* ERWIN9.RGN  ERWIN9.STR on child update no action */
+  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="ERWIN9", PARENT_TABLE="RGN"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="STR"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.RGN_ERWIN9.STR", FK_COLUMNS="RGN_NO" */
+  SELECT count(*) INTO NUMROWS
+    FROM ERWIN9.RGN
+    WHERE
+      /* %JoinFKPK(:%New,ERWIN9.RGN," = "," AND") */
+      :new.RGN_NO = ERWIN9.RGN.RGN_NO;
+  IF (
+    /* %NotnullFK(:%New," IS NOT NULL AND") */
+    :new.RGN_NO IS NOT NULL AND
+    NUMROWS = 0
+  )
+  THEN
+    raise_application_error(
+      -20007,
+      'Cannot update ERWIN9.STR because ERWIN9.RGN does not exist.'
+    );
+  END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER  tD_PURCHS_ORDER_ AFTER DELETE ON PRCHSORDR for each row
+-- erwin Builtin Trigger
+-- DELETE trigger on PRCHSORDR 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* ERWIN9.PRCHSORDR  ERWIN9.ORDR_CMDTY on parent delete restrict */
+    /* ERWIN_RELATION:CHECKSUM="00010322", PARENT_OWNER="ERWIN9", PARENT_TABLE="PRCHSORDR"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="ORDR_CMDTY"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.PRCHSORDR_ERWIN9.ORDR_CMDTY", FK_COLUMNS="ORDR_NO" */
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.ORDR_CMDTY
+      WHERE
+        /*  %JoinFKPK(ERWIN9.ORDR_CMDTY,:%Old," = "," AND") */
+        ERWIN9.ORDR_CMDTY.ORDR_NO = :old.ORDR_NO;
+    IF (NUMROWS > 0)
+    THEN
+      raise_application_error(
+        -20001,
+        'Cannot delete ERWIN9.PRCHSORDR because ERWIN9.ORDR_CMDTY exists.'
+      );
+    END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tI_PURCHS_ORDER_ BEFORE INSERT ON PRCHSORDR for each row
+-- erwin Builtin Trigger
+-- INSERT trigger on PRCHSORDR 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* ERWIN9.CUST  ERWIN9.PRCHSORDR on child insert set null */
+    /* ERWIN_RELATION:CHECKSUM="00022e3a", PARENT_OWNER="ERWIN9", PARENT_TABLE="CUST"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="PRCHSORDR"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.CUST_ERWIN9.PRCHSORDR", FK_COLUMNS="CUST_NO" */
+    UPDATE ERWIN9.PRCHSORDR
+      SET
+        /* %SetFK(ERWIN9.PRCHSORDR,NULL) */
+        ERWIN9.PRCHSORDR.CUST_NO = NULL
+      WHERE
+        NOT EXISTS (
+          SELECT * FROM ERWIN9.CUST
+            WHERE
+              /* %JoinFKPK(:%New,ERWIN9.CUST," = "," AND") */
+              :new.CUST_NO = ERWIN9.CUST.CUST_NO
+        ) 
+        /* %JoinPKPK(ERWIN9.PRCHSORDR,:%New," = "," AND") */
+         and ERWIN9.PRCHSORDR.ORDR_NO = :new.ORDR_NO;
+
+    /* erwin Builtin Trigger */
+    /* ERWIN9.STR  ERWIN9.PRCHSORDR on child insert restrict */
+    /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="ERWIN9", PARENT_TABLE="STR"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="PRCHSORDR"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.STR_ERWIN9.PRCHSORDR", FK_COLUMNS="STR_NO" */
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.STR
+      WHERE
+        /* %JoinFKPK(:%New,ERWIN9.STR," = "," AND") */
+        :new.STR_NO = ERWIN9.STR.STR_NO;
+    IF (
+      /* %NotnullFK(:%New," IS NOT NULL AND") */
+      
+      NUMROWS = 0
+    )
+    THEN
+      raise_application_error(
+        -20002,
+        'Cannot insert ERWIN9.PRCHSORDR because ERWIN9.STR does not exist.'
+      );
+    END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tU_PURCHS_ORDER_ AFTER UPDATE ON PRCHSORDR for each row
+-- erwin Builtin Trigger
+-- UPDATE trigger on PRCHSORDR 
+DECLARE NUMROWS INTEGER;
+BEGIN
+  /* erwin Builtin Trigger */
+  /* ERWIN9.PRCHSORDR  ERWIN9.ORDR_CMDTY on parent update restrict */
+  /* ERWIN_RELATION:CHECKSUM="000367f9", PARENT_OWNER="ERWIN9", PARENT_TABLE="PRCHSORDR"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="ORDR_CMDTY"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.PRCHSORDR_ERWIN9.ORDR_CMDTY", FK_COLUMNS="ORDR_NO" */
+  IF
+    /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
+    :old.ORDR_NO <> :new.ORDR_NO
+  THEN
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.ORDR_CMDTY
+      WHERE
+        /*  %JoinFKPK(ERWIN9.ORDR_CMDTY,:%Old," = "," AND") */
+        ERWIN9.ORDR_CMDTY.ORDR_NO = :old.ORDR_NO;
+    IF (NUMROWS > 0)
+    THEN 
+      raise_application_error(
+        -20005,
+        'Cannot update ERWIN9.PRCHSORDR because ERWIN9.ORDR_CMDTY exists.'
+      );
+    END IF;
+  END IF;
+
+  /* erwin Builtin Trigger */
+  /* ERWIN9.CUST  ERWIN9.PRCHSORDR on child update no action */
+  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="ERWIN9", PARENT_TABLE="CUST"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="PRCHSORDR"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.CUST_ERWIN9.PRCHSORDR", FK_COLUMNS="CUST_NO" */
+  SELECT count(*) INTO NUMROWS
+    FROM ERWIN9.CUST
+    WHERE
+      /* %JoinFKPK(:%New,ERWIN9.CUST," = "," AND") */
+      :new.CUST_NO = ERWIN9.CUST.CUST_NO;
+  IF (
+    /* %NotnullFK(:%New," IS NOT NULL AND") */
+    :new.CUST_NO IS NOT NULL AND
+    NUMROWS = 0
+  )
+  THEN
+    raise_application_error(
+      -20007,
+      'Cannot update ERWIN9.PRCHSORDR because ERWIN9.CUST does not exist.'
+    );
+  END IF;
+
+  /* erwin Builtin Trigger */
+  /* ERWIN9.STR  ERWIN9.PRCHSORDR on child update restrict */
+  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="ERWIN9", PARENT_TABLE="STR"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="PRCHSORDR"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.STR_ERWIN9.PRCHSORDR", FK_COLUMNS="STR_NO" */
+  SELECT count(*) INTO NUMROWS
+    FROM ERWIN9.STR
+    WHERE
+      /* %JoinFKPK(:%New,ERWIN9.STR," = "," AND") */
+      :new.STR_NO = ERWIN9.STR.STR_NO;
+  IF (
+    /* %NotnullFK(:%New," IS NOT NULL AND") */
+    
+    NUMROWS = 0
+  )
+  THEN
+    raise_application_error(
+      -20007,
+      'Cannot update ERWIN9.PRCHSORDR because ERWIN9.STR does not exist.'
+    );
+  END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER  tD_ORDER_ITM_ AFTER DELETE ON ORDR_CMDTY for each row
+-- erwin Builtin Trigger
+-- DELETE trigger on ORDR_CMDTY 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* ERWIN9.ORDR_CMDTY  ERWIN9.ORDR_DLVY on parent delete restrict */
+    /* ERWIN_RELATION:CHECKSUM="0003749d", PARENT_OWNER="ERWIN9", PARENT_TABLE="ORDR_CMDTY"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="ORDR_DLVY"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.ORDR_CMDTY_ERWIN9.ORDR_DLVY", FK_COLUMNS="ORDR_NO""CMDTY_NO" */
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.ORDR_DLVY
+      WHERE
+        /*  %JoinFKPK(ERWIN9.ORDR_DLVY,:%Old," = "," AND") */
+        ERWIN9.ORDR_DLVY.ORDR_NO = :old.ORDR_NO AND
+        ERWIN9.ORDR_DLVY.CMDTY_NO = :old.CMDTY_NO;
+    IF (NUMROWS > 0)
+    THEN
+      raise_application_error(
+        -20001,
+        'Cannot delete ERWIN9.ORDR_CMDTY because ERWIN9.ORDR_DLVY exists.'
+      );
+    END IF;
+
+    /* erwin Builtin Trigger */
+    /* ERWIN9.ORDR_CMDTY  ERWIN9.SNDBK_BOOK on parent delete set null */
+    /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="ERWIN9", PARENT_TABLE="ORDR_CMDTY"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="SNDBK_BOOK"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.ORDR_CMDTY_ERWIN9.SNDBK_BOOK", FK_COLUMNS="ORDR_NO""CMDTY_NO" */
+    UPDATE ERWIN9.SNDBK_BOOK
+      SET
+        /* %SetFK(ERWIN9.SNDBK_BOOK,NULL) */
+        ERWIN9.SNDBK_BOOK.ORDR_NO = NULL,
+        ERWIN9.SNDBK_BOOK.CMDTY_NO = NULL
+      WHERE
+        /* %JoinFKPK(ERWIN9.SNDBK_BOOK,:%Old," = "," AND") */
+        ERWIN9.SNDBK_BOOK.ORDR_NO = :old.ORDR_NO AND
+        ERWIN9.SNDBK_BOOK.CMDTY_NO = :old.CMDTY_NO;
+
+    /* erwin Builtin Trigger */
+    /* ERWIN9.ORDR_CMDTY  ERWIN9.RYTS_HSTRY on parent delete set null */
+    /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="ERWIN9", PARENT_TABLE="ORDR_CMDTY"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="RYTS_HSTRY"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.ORDR_CMDTY_ERWIN9.RYTS_HSTRY", FK_COLUMNS="ORDR_NO""CMDTY_NO" */
+    UPDATE ERWIN9.RYTS_HSTRY
+      SET
+        /* %SetFK(ERWIN9.RYTS_HSTRY,NULL) */
+        ERWIN9.RYTS_HSTRY.ORDR_NO = NULL,
+        ERWIN9.RYTS_HSTRY.CMDTY_NO = NULL
+      WHERE
+        /* %JoinFKPK(ERWIN9.RYTS_HSTRY,:%Old," = "," AND") */
+        ERWIN9.RYTS_HSTRY.ORDR_NO = :old.ORDR_NO AND
+        ERWIN9.RYTS_HSTRY.CMDTY_NO = :old.CMDTY_NO;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tI_ORDER_ITM_ BEFORE INSERT ON ORDR_CMDTY for each row
+-- erwin Builtin Trigger
+-- INSERT trigger on ORDR_CMDTY 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* ERWIN9.BOOK  ERWIN9.ORDR_CMDTY on child insert restrict */
+    /* ERWIN_RELATION:CHECKSUM="0003926a", PARENT_OWNER="ERWIN9", PARENT_TABLE="BOOK"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="ORDR_CMDTY"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.BOOK_ERWIN9.ORDR_CMDTY", FK_COLUMNS="BOOK_NO" */
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.BOOK
+      WHERE
+        /* %JoinFKPK(:%New,ERWIN9.BOOK," = "," AND") */
+        :new.BOOK_NO = ERWIN9.BOOK.BOOK_NO;
+    IF (
+      /* %NotnullFK(:%New," IS NOT NULL AND") */
+      
+      NUMROWS = 0
+    )
+    THEN
+      raise_application_error(
+        -20002,
+        'Cannot insert ERWIN9.ORDR_CMDTY because ERWIN9.BOOK does not exist.'
+      );
+    END IF;
+
+    /* erwin Builtin Trigger */
+    /* ERWIN9.DSCNT  ERWIN9.ORDR_CMDTY on child insert set null */
+    /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="ERWIN9", PARENT_TABLE="DSCNT"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="ORDR_CMDTY"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.DSCNT_ERWIN9.ORDR_CMDTY", FK_COLUMNS="DSCNT_CD" */
+    UPDATE ERWIN9.ORDR_CMDTY
+      SET
+        /* %SetFK(ERWIN9.ORDR_CMDTY,NULL) */
+        ERWIN9.ORDR_CMDTY.DSCNT_CD = NULL
+      WHERE
+        NOT EXISTS (
+          SELECT * FROM ERWIN9.DSCNT
+            WHERE
+              /* %JoinFKPK(:%New,ERWIN9.DSCNT," = "," AND") */
+              :new.DSCNT_CD = ERWIN9.DSCNT.DSCNT_CD
+        ) 
+        /* %JoinPKPK(ERWIN9.ORDR_CMDTY,:%New," = "," AND") */
+         and ERWIN9.ORDR_CMDTY.ORDR_NO = :new.ORDR_NO AND
+        ERWIN9.ORDR_CMDTY.CMDTY_NO = :new.CMDTY_NO;
+
+    /* erwin Builtin Trigger */
+    /* ERWIN9.PRCHSORDR  ERWIN9.ORDR_CMDTY on child insert restrict */
+    /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="ERWIN9", PARENT_TABLE="PRCHSORDR"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="ORDR_CMDTY"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.PRCHSORDR_ERWIN9.ORDR_CMDTY", FK_COLUMNS="ORDR_NO" */
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.PRCHSORDR
+      WHERE
+        /* %JoinFKPK(:%New,ERWIN9.PRCHSORDR," = "," AND") */
+        :new.ORDR_NO = ERWIN9.PRCHSORDR.ORDR_NO;
+    IF (
+      /* %NotnullFK(:%New," IS NOT NULL AND") */
+      
+      NUMROWS = 0
+    )
+    THEN
+      raise_application_error(
+        -20002,
+        'Cannot insert ERWIN9.ORDR_CMDTY because ERWIN9.PRCHSORDR does not exist.'
+      );
+    END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tU_ORDER_ITM_ AFTER UPDATE ON ORDR_CMDTY for each row
+-- erwin Builtin Trigger
+-- UPDATE trigger on ORDR_CMDTY 
+DECLARE NUMROWS INTEGER;
+BEGIN
+  /* erwin Builtin Trigger */
+  /* ERWIN9.ORDR_CMDTY  ERWIN9.ORDR_DLVY on parent update restrict */
+  /* ERWIN_RELATION:CHECKSUM="000759ea", PARENT_OWNER="ERWIN9", PARENT_TABLE="ORDR_CMDTY"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="ORDR_DLVY"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.ORDR_CMDTY_ERWIN9.ORDR_DLVY", FK_COLUMNS="ORDR_NO""CMDTY_NO" */
+  IF
+    /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
+    :old.ORDR_NO <> :new.ORDR_NO OR 
+    :old.CMDTY_NO <> :new.CMDTY_NO
+  THEN
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.ORDR_DLVY
+      WHERE
+        /*  %JoinFKPK(ERWIN9.ORDR_DLVY,:%Old," = "," AND") */
+        ERWIN9.ORDR_DLVY.ORDR_NO = :old.ORDR_NO AND
+        ERWIN9.ORDR_DLVY.CMDTY_NO = :old.CMDTY_NO;
+    IF (NUMROWS > 0)
+    THEN 
+      raise_application_error(
+        -20005,
+        'Cannot update ERWIN9.ORDR_CMDTY because ERWIN9.ORDR_DLVY exists.'
+      );
+    END IF;
+  END IF;
+
+  /* ERWIN9.ORDR_CMDTY  ERWIN9.SNDBK_BOOK on parent update set null */
+  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="ERWIN9", PARENT_TABLE="ORDR_CMDTY"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="SNDBK_BOOK"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.ORDR_CMDTY_ERWIN9.SNDBK_BOOK", FK_COLUMNS="ORDR_NO""CMDTY_NO" */
+  IF
+    /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
+    :old.ORDR_NO <> :new.ORDR_NO OR 
+    :old.CMDTY_NO <> :new.CMDTY_NO
+  THEN
+    UPDATE ERWIN9.SNDBK_BOOK
+      SET
+        /* %SetFK(ERWIN9.SNDBK_BOOK,NULL) */
+        ERWIN9.SNDBK_BOOK.ORDR_NO = NULL,
+        ERWIN9.SNDBK_BOOK.CMDTY_NO = NULL
+      WHERE
+        /* %JoinFKPK(ERWIN9.SNDBK_BOOK,:%Old," = ",",") */
+        ERWIN9.SNDBK_BOOK.ORDR_NO = :old.ORDR_NO AND
+        ERWIN9.SNDBK_BOOK.CMDTY_NO = :old.CMDTY_NO;
+  END IF;
+
+  /* ERWIN9.ORDR_CMDTY  ERWIN9.RYTS_HSTRY on parent update set null */
+  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="ERWIN9", PARENT_TABLE="ORDR_CMDTY"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="RYTS_HSTRY"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.ORDR_CMDTY_ERWIN9.RYTS_HSTRY", FK_COLUMNS="ORDR_NO""CMDTY_NO" */
+  IF
+    /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
+    :old.ORDR_NO <> :new.ORDR_NO OR 
+    :old.CMDTY_NO <> :new.CMDTY_NO
+  THEN
+    UPDATE ERWIN9.RYTS_HSTRY
+      SET
+        /* %SetFK(ERWIN9.RYTS_HSTRY,NULL) */
+        ERWIN9.RYTS_HSTRY.ORDR_NO = NULL,
+        ERWIN9.RYTS_HSTRY.CMDTY_NO = NULL
+      WHERE
+        /* %JoinFKPK(ERWIN9.RYTS_HSTRY,:%Old," = ",",") */
+        ERWIN9.RYTS_HSTRY.ORDR_NO = :old.ORDR_NO AND
+        ERWIN9.RYTS_HSTRY.CMDTY_NO = :old.CMDTY_NO;
+  END IF;
+
+  /* erwin Builtin Trigger */
+  /* ERWIN9.BOOK  ERWIN9.ORDR_CMDTY on child update restrict */
+  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="ERWIN9", PARENT_TABLE="BOOK"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="ORDR_CMDTY"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.BOOK_ERWIN9.ORDR_CMDTY", FK_COLUMNS="BOOK_NO" */
+  SELECT count(*) INTO NUMROWS
+    FROM ERWIN9.BOOK
+    WHERE
+      /* %JoinFKPK(:%New,ERWIN9.BOOK," = "," AND") */
+      :new.BOOK_NO = ERWIN9.BOOK.BOOK_NO;
+  IF (
+    /* %NotnullFK(:%New," IS NOT NULL AND") */
+    
+    NUMROWS = 0
+  )
+  THEN
+    raise_application_error(
+      -20007,
+      'Cannot update ERWIN9.ORDR_CMDTY because ERWIN9.BOOK does not exist.'
+    );
+  END IF;
+
+  /* erwin Builtin Trigger */
+  /* ERWIN9.DSCNT  ERWIN9.ORDR_CMDTY on child update no action */
+  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="ERWIN9", PARENT_TABLE="DSCNT"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="ORDR_CMDTY"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.DSCNT_ERWIN9.ORDR_CMDTY", FK_COLUMNS="DSCNT_CD" */
+  SELECT count(*) INTO NUMROWS
+    FROM ERWIN9.DSCNT
+    WHERE
+      /* %JoinFKPK(:%New,ERWIN9.DSCNT," = "," AND") */
+      :new.DSCNT_CD = ERWIN9.DSCNT.DSCNT_CD;
+  IF (
+    /* %NotnullFK(:%New," IS NOT NULL AND") */
+    :new.DSCNT_CD IS NOT NULL AND
+    NUMROWS = 0
+  )
+  THEN
+    raise_application_error(
+      -20007,
+      'Cannot update ERWIN9.ORDR_CMDTY because ERWIN9.DSCNT does not exist.'
+    );
+  END IF;
+
+  /* erwin Builtin Trigger */
+  /* ERWIN9.PRCHSORDR  ERWIN9.ORDR_CMDTY on child update restrict */
+  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="ERWIN9", PARENT_TABLE="PRCHSORDR"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="ORDR_CMDTY"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.PRCHSORDR_ERWIN9.ORDR_CMDTY", FK_COLUMNS="ORDR_NO" */
+  SELECT count(*) INTO NUMROWS
+    FROM ERWIN9.PRCHSORDR
+    WHERE
+      /* %JoinFKPK(:%New,ERWIN9.PRCHSORDR," = "," AND") */
+      :new.ORDR_NO = ERWIN9.PRCHSORDR.ORDR_NO;
+  IF (
+    /* %NotnullFK(:%New," IS NOT NULL AND") */
+    
+    NUMROWS = 0
+  )
+  THEN
+    raise_application_error(
+      -20007,
+      'Cannot update ERWIN9.ORDR_CMDTY because ERWIN9.PRCHSORDR does not exist.'
+    );
+  END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER  tD_AR_ AFTER DELETE ON RGN for each row
+-- erwin Builtin Trigger
+-- DELETE trigger on RGN 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* ERWIN9.RGN  ERWIN9.STR on parent delete set null */
+    /* ERWIN_RELATION:CHECKSUM="0000b8ac", PARENT_OWNER="ERWIN9", PARENT_TABLE="RGN"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="STR"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.RGN_ERWIN9.STR", FK_COLUMNS="RGN_NO" */
+    UPDATE ERWIN9.STR
+      SET
+        /* %SetFK(ERWIN9.STR,NULL) */
+        ERWIN9.STR.RGN_NO = NULL
+      WHERE
+        /* %JoinFKPK(ERWIN9.STR,:%Old," = "," AND") */
+        ERWIN9.STR.RGN_NO = :old.RGN_NO;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tU_AR_ AFTER UPDATE ON RGN for each row
+-- erwin Builtin Trigger
+-- UPDATE trigger on RGN 
+DECLARE NUMROWS INTEGER;
+BEGIN
+  /* ERWIN9.RGN  ERWIN9.STR on parent update set null */
+  /* ERWIN_RELATION:CHECKSUM="0000d461", PARENT_OWNER="ERWIN9", PARENT_TABLE="RGN"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="STR"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.RGN_ERWIN9.STR", FK_COLUMNS="RGN_NO" */
+  IF
+    /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
+    :old.RGN_NO <> :new.RGN_NO
+  THEN
+    UPDATE ERWIN9.STR
+      SET
+        /* %SetFK(ERWIN9.STR,NULL) */
+        ERWIN9.STR.RGN_NO = NULL
+      WHERE
+        /* %JoinFKPK(ERWIN9.STR,:%Old," = ",",") */
+        ERWIN9.STR.RGN_NO = :old.RGN_NO;
+  END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER  tD_RYALTY_ AFTER DELETE ON RYTS for each row
+-- erwin Builtin Trigger
+-- DELETE trigger on RYTS 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* ERWIN9.RYTS  ERWIN9.RYTS_STLM on parent delete restrict */
+    /* ERWIN_RELATION:CHECKSUM="0000f55f", PARENT_OWNER="ERWIN9", PARENT_TABLE="RYTS"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="RYTS_STLM"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.RYTS_ERWIN9.RYTS_STLM", FK_COLUMNS="RYTS_NO" */
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.RYTS_STLM
+      WHERE
+        /*  %JoinFKPK(ERWIN9.RYTS_STLM,:%Old," = "," AND") */
+        ERWIN9.RYTS_STLM.RYTS_NO = :old.RYTS_NO;
+    IF (NUMROWS > 0)
+    THEN
+      raise_application_error(
+        -20001,
+        'Cannot delete ERWIN9.RYTS because ERWIN9.RYTS_STLM exists.'
+      );
+    END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tU_RYALTY_ AFTER UPDATE ON RYTS for each row
+-- erwin Builtin Trigger
+-- UPDATE trigger on RYTS 
+DECLARE NUMROWS INTEGER;
+BEGIN
+  /* erwin Builtin Trigger */
+  /* ERWIN9.RYTS  ERWIN9.RYTS_STLM on parent update restrict */
+  /* ERWIN_RELATION:CHECKSUM="0001243e", PARENT_OWNER="ERWIN9", PARENT_TABLE="RYTS"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="RYTS_STLM"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.RYTS_ERWIN9.RYTS_STLM", FK_COLUMNS="RYTS_NO" */
+  IF
+    /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
+    :old.RYTS_NO <> :new.RYTS_NO
+  THEN
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.RYTS_STLM
+      WHERE
+        /*  %JoinFKPK(ERWIN9.RYTS_STLM,:%Old," = "," AND") */
+        ERWIN9.RYTS_STLM.RYTS_NO = :old.RYTS_NO;
+    IF (NUMROWS > 0)
+    THEN 
+      raise_application_error(
+        -20005,
+        'Cannot update ERWIN9.RYTS because ERWIN9.RYTS_STLM exists.'
+      );
+    END IF;
+  END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tI_RYALTY_PAY_ BEFORE INSERT ON RYTS_STLM for each row
+-- erwin Builtin Trigger
+-- INSERT trigger on RYTS_STLM 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* ERWIN9.AUT_BOOK  ERWIN9.RYTS_STLM on child insert restrict */
+    /* ERWIN_RELATION:CHECKSUM="00026478", PARENT_OWNER="ERWIN9", PARENT_TABLE="AUT_BOOK"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="RYTS_STLM"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.AUT_BOOK_ERWIN9.RYTS_STLM", FK_COLUMNS="AUT_NO""BOOK_NO""CRTR_YR" */
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.AUT_BOOK
+      WHERE
+        /* %JoinFKPK(:%New,ERWIN9.AUT_BOOK," = "," AND") */
+        :new.AUT_NO = ERWIN9.AUT_BOOK.AUT_NO AND
+        :new.BOOK_NO = ERWIN9.AUT_BOOK.BOOK_NO AND
+        :new.CRTR_YR = ERWIN9.AUT_BOOK.CRTR_YR;
+    IF (
+      /* %NotnullFK(:%New," IS NOT NULL AND") */
+      
+      NUMROWS = 0
+    )
+    THEN
+      raise_application_error(
+        -20002,
+        'Cannot insert ERWIN9.RYTS_STLM because ERWIN9.AUT_BOOK does not exist.'
+      );
+    END IF;
+
+    /* erwin Builtin Trigger */
+    /* ERWIN9.RYTS  ERWIN9.RYTS_STLM on child insert restrict */
+    /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="ERWIN9", PARENT_TABLE="RYTS"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="RYTS_STLM"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.RYTS_ERWIN9.RYTS_STLM", FK_COLUMNS="RYTS_NO" */
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.RYTS
+      WHERE
+        /* %JoinFKPK(:%New,ERWIN9.RYTS," = "," AND") */
+        :new.RYTS_NO = ERWIN9.RYTS.RYTS_NO;
+    IF (
+      /* %NotnullFK(:%New," IS NOT NULL AND") */
+      
+      NUMROWS = 0
+    )
+    THEN
+      raise_application_error(
+        -20002,
+        'Cannot insert ERWIN9.RYTS_STLM because ERWIN9.RYTS does not exist.'
+      );
+    END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tU_RYALTY_PAY_ AFTER UPDATE ON RYTS_STLM for each row
+-- erwin Builtin Trigger
+-- UPDATE trigger on RYTS_STLM 
+DECLARE NUMROWS INTEGER;
+BEGIN
+  /* erwin Builtin Trigger */
+  /* ERWIN9.AUT_BOOK  ERWIN9.RYTS_STLM on child update restrict */
+  /* ERWIN_RELATION:CHECKSUM="00026a28", PARENT_OWNER="ERWIN9", PARENT_TABLE="AUT_BOOK"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="RYTS_STLM"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.AUT_BOOK_ERWIN9.RYTS_STLM", FK_COLUMNS="AUT_NO""BOOK_NO""CRTR_YR" */
+  SELECT count(*) INTO NUMROWS
+    FROM ERWIN9.AUT_BOOK
+    WHERE
+      /* %JoinFKPK(:%New,ERWIN9.AUT_BOOK," = "," AND") */
+      :new.AUT_NO = ERWIN9.AUT_BOOK.AUT_NO AND
+      :new.BOOK_NO = ERWIN9.AUT_BOOK.BOOK_NO AND
+      :new.CRTR_YR = ERWIN9.AUT_BOOK.CRTR_YR;
+  IF (
+    /* %NotnullFK(:%New," IS NOT NULL AND") */
+    
+    NUMROWS = 0
+  )
+  THEN
+    raise_application_error(
+      -20007,
+      'Cannot update ERWIN9.RYTS_STLM because ERWIN9.AUT_BOOK does not exist.'
+    );
+  END IF;
+
+  /* erwin Builtin Trigger */
+  /* ERWIN9.RYTS  ERWIN9.RYTS_STLM on child update restrict */
+  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="ERWIN9", PARENT_TABLE="RYTS"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="RYTS_STLM"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.RYTS_ERWIN9.RYTS_STLM", FK_COLUMNS="RYTS_NO" */
+  SELECT count(*) INTO NUMROWS
+    FROM ERWIN9.RYTS
+    WHERE
+      /* %JoinFKPK(:%New,ERWIN9.RYTS," = "," AND") */
+      :new.RYTS_NO = ERWIN9.RYTS.RYTS_NO;
+  IF (
+    /* %NotnullFK(:%New," IS NOT NULL AND") */
+    
+    NUMROWS = 0
+  )
+  THEN
+    raise_application_error(
+      -20007,
+      'Cannot update ERWIN9.RYTS_STLM because ERWIN9.RYTS does not exist.'
+    );
+  END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tI_RYALTY_HIST_ BEFORE INSERT ON RYTS_HSTRY for each row
+-- erwin Builtin Trigger
+-- INSERT trigger on RYTS_HSTRY 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* ERWIN9.ORDR_CMDTY  ERWIN9.RYTS_HSTRY on child insert set null */
+    /* ERWIN_RELATION:CHECKSUM="00015bc5", PARENT_OWNER="ERWIN9", PARENT_TABLE="ORDR_CMDTY"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="RYTS_HSTRY"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.ORDR_CMDTY_ERWIN9.RYTS_HSTRY", FK_COLUMNS="ORDR_NO""CMDTY_NO" */
+    UPDATE ERWIN9.RYTS_HSTRY
+      SET
+        /* %SetFK(ERWIN9.RYTS_HSTRY,NULL) */
+        ERWIN9.RYTS_HSTRY.ORDR_NO = NULL,
+        ERWIN9.RYTS_HSTRY.CMDTY_NO = NULL
+      WHERE
+        NOT EXISTS (
+          SELECT * FROM ERWIN9.ORDR_CMDTY
+            WHERE
+              /* %JoinFKPK(:%New,ERWIN9.ORDR_CMDTY," = "," AND") */
+              :new.ORDR_NO = ERWIN9.ORDR_CMDTY.ORDR_NO AND
+              :new.CMDTY_NO = ERWIN9.ORDR_CMDTY.CMDTY_NO
+        ) 
+        /* %JoinPKPK(ERWIN9.RYTS_HSTRY,:%New," = "," AND") */
+         and ERWIN9.RYTS_HSTRY.RYTS_HSTRY_NO = :new.RYTS_HSTRY_NO;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tU_RYALTY_HIST_ AFTER UPDATE ON RYTS_HSTRY for each row
+-- erwin Builtin Trigger
+-- UPDATE trigger on RYTS_HSTRY 
+DECLARE NUMROWS INTEGER;
+BEGIN
+  /* erwin Builtin Trigger */
+  /* ERWIN9.ORDR_CMDTY  ERWIN9.RYTS_HSTRY on child update no action */
+  /* ERWIN_RELATION:CHECKSUM="000143c3", PARENT_OWNER="ERWIN9", PARENT_TABLE="ORDR_CMDTY"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="RYTS_HSTRY"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.ORDR_CMDTY_ERWIN9.RYTS_HSTRY", FK_COLUMNS="ORDR_NO""CMDTY_NO" */
+  SELECT count(*) INTO NUMROWS
+    FROM ERWIN9.ORDR_CMDTY
+    WHERE
+      /* %JoinFKPK(:%New,ERWIN9.ORDR_CMDTY," = "," AND") */
+      :new.ORDR_NO = ERWIN9.ORDR_CMDTY.ORDR_NO AND
+      :new.CMDTY_NO = ERWIN9.ORDR_CMDTY.CMDTY_NO;
+  IF (
+    /* %NotnullFK(:%New," IS NOT NULL AND") */
+    :new.ORDR_NO IS NOT NULL AND
+    :new.CMDTY_NO IS NOT NULL AND
+    NUMROWS = 0
+  )
+  THEN
+    raise_application_error(
+      -20007,
+      'Cannot update ERWIN9.RYTS_HSTRY because ERWIN9.ORDR_CMDTY does not exist.'
+    );
+  END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tI_Return BEFORE INSERT ON SNDBK_BOOK for each row
+-- erwin Builtin Trigger
+-- INSERT trigger on SNDBK_BOOK 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* ERWIN9.ORDR_CMDTY  ERWIN9.SNDBK_BOOK on child insert set null */
+    /* ERWIN_RELATION:CHECKSUM="000146f6", PARENT_OWNER="ERWIN9", PARENT_TABLE="ORDR_CMDTY"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="SNDBK_BOOK"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.ORDR_CMDTY_ERWIN9.SNDBK_BOOK", FK_COLUMNS="ORDR_NO""CMDTY_NO" */
+    UPDATE ERWIN9.SNDBK_BOOK
+      SET
+        /* %SetFK(ERWIN9.SNDBK_BOOK,NULL) */
+        ERWIN9.SNDBK_BOOK.ORDR_NO = NULL,
+        ERWIN9.SNDBK_BOOK.CMDTY_NO = NULL
+      WHERE
+        NOT EXISTS (
+          SELECT * FROM ERWIN9.ORDR_CMDTY
+            WHERE
+              /* %JoinFKPK(:%New,ERWIN9.ORDR_CMDTY," = "," AND") */
+              :new.ORDR_NO = ERWIN9.ORDR_CMDTY.ORDR_NO AND
+              :new.CMDTY_NO = ERWIN9.ORDR_CMDTY.CMDTY_NO
+        ) 
+        /* %JoinPKPK(ERWIN9.SNDBK_BOOK,:%New," = "," AND") */
+         and ERWIN9.SNDBK_BOOK.SNDBK_NO = :new.SNDBK_NO;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tU_Return AFTER UPDATE ON SNDBK_BOOK for each row
+-- erwin Builtin Trigger
+-- UPDATE trigger on SNDBK_BOOK 
+DECLARE NUMROWS INTEGER;
+BEGIN
+  /* erwin Builtin Trigger */
+  /* ERWIN9.ORDR_CMDTY  ERWIN9.SNDBK_BOOK on child update no action */
+  /* ERWIN_RELATION:CHECKSUM="0001525c", PARENT_OWNER="ERWIN9", PARENT_TABLE="ORDR_CMDTY"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="SNDBK_BOOK"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.ORDR_CMDTY_ERWIN9.SNDBK_BOOK", FK_COLUMNS="ORDR_NO""CMDTY_NO" */
+  SELECT count(*) INTO NUMROWS
+    FROM ERWIN9.ORDR_CMDTY
+    WHERE
+      /* %JoinFKPK(:%New,ERWIN9.ORDR_CMDTY," = "," AND") */
+      :new.ORDR_NO = ERWIN9.ORDR_CMDTY.ORDR_NO AND
+      :new.CMDTY_NO = ERWIN9.ORDR_CMDTY.CMDTY_NO;
+  IF (
+    /* %NotnullFK(:%New," IS NOT NULL AND") */
+    :new.ORDR_NO IS NOT NULL AND
+    :new.CMDTY_NO IS NOT NULL AND
+    NUMROWS = 0
+  )
+  THEN
+    raise_application_error(
+      -20007,
+      'Cannot update ERWIN9.SNDBK_BOOK because ERWIN9.ORDR_CMDTY does not exist.'
+    );
+  END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER  tD_ORDER_DLVY_ AFTER DELETE ON ORDR_DLVY for each row
+-- erwin Builtin Trigger
+-- DELETE trigger on ORDR_DLVY 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* ERWIN9.ORDR_DLVY  ERWIN9.CROVR_ORDR on parent delete restrict */
+    /* ERWIN_RELATION:CHECKSUM="00013a28", PARENT_OWNER="ERWIN9", PARENT_TABLE="ORDR_DLVY"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="CROVR_ORDR"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.ORDR_DLVY_ERWIN9.CROVR_ORDR", FK_COLUMNS="ORDR_DLVY_NO""ORDR_NO""CMDTY_NO" */
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.CROVR_ORDR
+      WHERE
+        /*  %JoinFKPK(ERWIN9.CROVR_ORDR,:%Old," = "," AND") */
+        ERWIN9.CROVR_ORDR.ORDR_DLVY_NO = :old.ORDR_DLVY_NO AND
+        ERWIN9.CROVR_ORDR.ORDR_NO = :old.ORDR_NO AND
+        ERWIN9.CROVR_ORDR.CMDTY_NO = :old.CMDTY_NO;
+    IF (NUMROWS > 0)
+    THEN
+      raise_application_error(
+        -20001,
+        'Cannot delete ERWIN9.ORDR_DLVY because ERWIN9.CROVR_ORDR exists.'
+      );
+    END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tI_ORDER_DLVY_ BEFORE INSERT ON ORDR_DLVY for each row
+-- erwin Builtin Trigger
+-- INSERT trigger on ORDR_DLVY 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* ERWIN9.ORDR_CMDTY  ERWIN9.ORDR_DLVY on child insert restrict */
+    /* ERWIN_RELATION:CHECKSUM="0001303b", PARENT_OWNER="ERWIN9", PARENT_TABLE="ORDR_CMDTY"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="ORDR_DLVY"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.ORDR_CMDTY_ERWIN9.ORDR_DLVY", FK_COLUMNS="ORDR_NO""CMDTY_NO" */
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.ORDR_CMDTY
+      WHERE
+        /* %JoinFKPK(:%New,ERWIN9.ORDR_CMDTY," = "," AND") */
+        :new.ORDR_NO = ERWIN9.ORDR_CMDTY.ORDR_NO AND
+        :new.CMDTY_NO = ERWIN9.ORDR_CMDTY.CMDTY_NO;
+    IF (
+      /* %NotnullFK(:%New," IS NOT NULL AND") */
+      
+      NUMROWS = 0
+    )
+    THEN
+      raise_application_error(
+        -20002,
+        'Cannot insert ERWIN9.ORDR_DLVY because ERWIN9.ORDR_CMDTY does not exist.'
+      );
+    END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tU_ORDER_DLVY_ AFTER UPDATE ON ORDR_DLVY for each row
+-- erwin Builtin Trigger
+-- UPDATE trigger on ORDR_DLVY 
+DECLARE NUMROWS INTEGER;
+BEGIN
+  /* erwin Builtin Trigger */
+  /* ERWIN9.ORDR_DLVY  ERWIN9.CROVR_ORDR on parent update restrict */
+  /* ERWIN_RELATION:CHECKSUM="0002d4e3", PARENT_OWNER="ERWIN9", PARENT_TABLE="ORDR_DLVY"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="CROVR_ORDR"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.ORDR_DLVY_ERWIN9.CROVR_ORDR", FK_COLUMNS="ORDR_DLVY_NO""ORDR_NO""CMDTY_NO" */
+  IF
+    /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
+    :old.ORDR_DLVY_NO <> :new.ORDR_DLVY_NO OR 
+    :old.ORDR_NO <> :new.ORDR_NO OR 
+    :old.CMDTY_NO <> :new.CMDTY_NO
+  THEN
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.CROVR_ORDR
+      WHERE
+        /*  %JoinFKPK(ERWIN9.CROVR_ORDR,:%Old," = "," AND") */
+        ERWIN9.CROVR_ORDR.ORDR_DLVY_NO = :old.ORDR_DLVY_NO AND
+        ERWIN9.CROVR_ORDR.ORDR_NO = :old.ORDR_NO AND
+        ERWIN9.CROVR_ORDR.CMDTY_NO = :old.CMDTY_NO;
+    IF (NUMROWS > 0)
+    THEN 
+      raise_application_error(
+        -20005,
+        'Cannot update ERWIN9.ORDR_DLVY because ERWIN9.CROVR_ORDR exists.'
+      );
+    END IF;
+  END IF;
+
+  /* erwin Builtin Trigger */
+  /* ERWIN9.ORDR_CMDTY  ERWIN9.ORDR_DLVY on child update restrict */
+  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="ERWIN9", PARENT_TABLE="ORDR_CMDTY"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="ORDR_DLVY"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.ORDR_CMDTY_ERWIN9.ORDR_DLVY", FK_COLUMNS="ORDR_NO""CMDTY_NO" */
+  SELECT count(*) INTO NUMROWS
+    FROM ERWIN9.ORDR_CMDTY
+    WHERE
+      /* %JoinFKPK(:%New,ERWIN9.ORDR_CMDTY," = "," AND") */
+      :new.ORDR_NO = ERWIN9.ORDR_CMDTY.ORDR_NO AND
+      :new.CMDTY_NO = ERWIN9.ORDR_CMDTY.CMDTY_NO;
+  IF (
+    /* %NotnullFK(:%New," IS NOT NULL AND") */
+    
+    NUMROWS = 0
+  )
+  THEN
+    raise_application_error(
+      -20007,
+      'Cannot update ERWIN9.ORDR_DLVY because ERWIN9.ORDR_CMDTY does not exist.'
+    );
+  END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tI_CYDF_ORDER_ BEFORE INSERT ON CROVR_ORDR for each row
+-- erwin Builtin Trigger
+-- INSERT trigger on CROVR_ORDR 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* ERWIN9.ORDR_DLVY  ERWIN9.CROVR_ORDR on child insert restrict */
+    /* ERWIN_RELATION:CHECKSUM="0001530e", PARENT_OWNER="ERWIN9", PARENT_TABLE="ORDR_DLVY"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="CROVR_ORDR"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.ORDR_DLVY_ERWIN9.CROVR_ORDR", FK_COLUMNS="ORDR_DLVY_NO""ORDR_NO""CMDTY_NO" */
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.ORDR_DLVY
+      WHERE
+        /* %JoinFKPK(:%New,ERWIN9.ORDR_DLVY," = "," AND") */
+        :new.ORDR_DLVY_NO = ERWIN9.ORDR_DLVY.ORDR_DLVY_NO AND
+        :new.ORDR_NO = ERWIN9.ORDR_DLVY.ORDR_NO AND
+        :new.CMDTY_NO = ERWIN9.ORDR_DLVY.CMDTY_NO;
+    IF (
+      /* %NotnullFK(:%New," IS NOT NULL AND") */
+      
+      NUMROWS = 0
+    )
+    THEN
+      raise_application_error(
+        -20002,
+        'Cannot insert ERWIN9.CROVR_ORDR because ERWIN9.ORDR_DLVY does not exist.'
+      );
+    END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tU_CYDF_ORDER_ AFTER UPDATE ON CROVR_ORDR for each row
+-- erwin Builtin Trigger
+-- UPDATE trigger on CROVR_ORDR 
+DECLARE NUMROWS INTEGER;
+BEGIN
+  /* erwin Builtin Trigger */
+  /* ERWIN9.ORDR_DLVY  ERWIN9.CROVR_ORDR on child update restrict */
+  /* ERWIN_RELATION:CHECKSUM="000152b7", PARENT_OWNER="ERWIN9", PARENT_TABLE="ORDR_DLVY"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="CROVR_ORDR"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.ORDR_DLVY_ERWIN9.CROVR_ORDR", FK_COLUMNS="ORDR_DLVY_NO""ORDR_NO""CMDTY_NO" */
+  SELECT count(*) INTO NUMROWS
+    FROM ERWIN9.ORDR_DLVY
+    WHERE
+      /* %JoinFKPK(:%New,ERWIN9.ORDR_DLVY," = "," AND") */
+      :new.ORDR_DLVY_NO = ERWIN9.ORDR_DLVY.ORDR_DLVY_NO AND
+      :new.ORDR_NO = ERWIN9.ORDR_DLVY.ORDR_NO AND
+      :new.CMDTY_NO = ERWIN9.ORDR_DLVY.CMDTY_NO;
+  IF (
+    /* %NotnullFK(:%New," IS NOT NULL AND") */
+    
+    NUMROWS = 0
+  )
+  THEN
+    raise_application_error(
+      -20007,
+      'Cannot update ERWIN9.CROVR_ORDR because ERWIN9.ORDR_DLVY does not exist.'
+    );
+  END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER  tD_PAY_ AFTER DELETE ON STLM for each row
+-- erwin Builtin Trigger
+-- DELETE trigger on STLM 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* ERWIN9.STLM  ERWIN9.PSNL_CHK on parent delete cascade */
+    /* ERWIN_RELATION:CHECKSUM="00024cf7", PARENT_OWNER="ERWIN9", PARENT_TABLE="STLM"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="PSNL_CHK"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.STLM_ERWIN9.PSNL_CHK", FK_COLUMNS="STLM_NO" */
+    DELETE FROM ERWIN9.PSNL_CHK
+      WHERE
+        /*  %JoinFKPK(ERWIN9.PSNL_CHK,:%Old," = "," AND") */
+        ERWIN9.PSNL_CHK.STLM_NO = :old.STLM_NO;
+
+    /* erwin Builtin Trigger */
+    /* ERWIN9.STLM  ERWIN9.PSTMNORD on parent delete cascade */
+    /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="ERWIN9", PARENT_TABLE="STLM"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="PSTMNORD"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.STLM_ERWIN9.PSTMNORD", FK_COLUMNS="STLM_NO" */
+    DELETE FROM ERWIN9.PSTMNORD
+      WHERE
+        /*  %JoinFKPK(ERWIN9.PSTMNORD,:%Old," = "," AND") */
+        ERWIN9.PSTMNORD.STLM_NO = :old.STLM_NO;
+
+    /* erwin Builtin Trigger */
+    /* ERWIN9.STLM  ERWIN9.CRCD on parent delete cascade */
+    /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="ERWIN9", PARENT_TABLE="STLM"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="CRCD"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.STLM_ERWIN9.CRCD", FK_COLUMNS="STLM_NO" */
+    DELETE FROM ERWIN9.CRCD
+      WHERE
+        /*  %JoinFKPK(ERWIN9.CRCD,:%Old," = "," AND") */
+        ERWIN9.CRCD.STLM_NO = :old.STLM_NO;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tU_PAY_ AFTER UPDATE ON STLM for each row
+-- erwin Builtin Trigger
+-- UPDATE trigger on STLM 
+DECLARE NUMROWS INTEGER;
+BEGIN
+  /* erwin Builtin Trigger */
+  /* ERWIN9.STLM  ERWIN9.PSNL_CHK on parent update cascade */
+  /* ERWIN_RELATION:CHECKSUM="00031e5f", PARENT_OWNER="ERWIN9", PARENT_TABLE="STLM"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="PSNL_CHK"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.STLM_ERWIN9.PSNL_CHK", FK_COLUMNS="STLM_NO" */
+  IF
+    /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
+    :old.STLM_NO <> :new.STLM_NO
+  THEN
+    UPDATE ERWIN9.PSNL_CHK
+      SET
+        /*  %JoinFKPK(ERWIN9.PSNL_CHK,:%New," = ",",") */
+        ERWIN9.PSNL_CHK.STLM_NO = :new.STLM_NO
+      WHERE
+        /*  %JoinFKPK(ERWIN9.PSNL_CHK,:%Old," = "," AND") */
+        ERWIN9.PSNL_CHK.STLM_NO = :old.STLM_NO;
+  END IF;
+
+  /* erwin Builtin Trigger */
+  /* ERWIN9.STLM  ERWIN9.PSTMNORD on parent update cascade */
+  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="ERWIN9", PARENT_TABLE="STLM"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="PSTMNORD"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.STLM_ERWIN9.PSTMNORD", FK_COLUMNS="STLM_NO" */
+  IF
+    /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
+    :old.STLM_NO <> :new.STLM_NO
+  THEN
+    UPDATE ERWIN9.PSTMNORD
+      SET
+        /*  %JoinFKPK(ERWIN9.PSTMNORD,:%New," = ",",") */
+        ERWIN9.PSTMNORD.STLM_NO = :new.STLM_NO
+      WHERE
+        /*  %JoinFKPK(ERWIN9.PSTMNORD,:%Old," = "," AND") */
+        ERWIN9.PSTMNORD.STLM_NO = :old.STLM_NO;
+  END IF;
+
+  /* erwin Builtin Trigger */
+  /* ERWIN9.STLM  ERWIN9.CRCD on parent update cascade */
+  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="ERWIN9", PARENT_TABLE="STLM"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="CRCD"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.STLM_ERWIN9.CRCD", FK_COLUMNS="STLM_NO" */
+  IF
+    /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
+    :old.STLM_NO <> :new.STLM_NO
+  THEN
+    UPDATE ERWIN9.CRCD
+      SET
+        /*  %JoinFKPK(ERWIN9.CRCD,:%New," = ",",") */
+        ERWIN9.CRCD.STLM_NO = :new.STLM_NO
+      WHERE
+        /*  %JoinFKPK(ERWIN9.CRCD,:%Old," = "," AND") */
+        ERWIN9.CRCD.STLM_NO = :old.STLM_NO;
+  END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tI_REPORT_ BEFORE INSERT ON RPTP for each row
+-- erwin Builtin Trigger
+-- INSERT trigger on RPTP 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* ERWIN9.EMP  ERWIN9.RPTP on child insert restrict */
+    /* ERWIN_RELATION:CHECKSUM="000200c0", PARENT_OWNER="ERWIN9", PARENT_TABLE="EMP"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="RPTP"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.EMP_ERWIN9.RPTP", FK_COLUMNS="WRTR_NO" */
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.EMP
+      WHERE
+        /* %JoinFKPK(:%New,ERWIN9.EMP," = "," AND") */
+        :new.WRTR_NO = ERWIN9.EMP.EMP_NO;
+    IF (
+      /* %NotnullFK(:%New," IS NOT NULL AND") */
+      
+      NUMROWS = 0
+    )
+    THEN
+      raise_application_error(
+        -20002,
+        'Cannot insert ERWIN9.RPTP because ERWIN9.EMP does not exist.'
+      );
+    END IF;
+
+    /* erwin Builtin Trigger */
+    /* ERWIN9.EMP  ERWIN9.RPTP on child insert restrict */
+    /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="ERWIN9", PARENT_TABLE="EMP"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="RPTP"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.EMP_ERWIN9.RPTP", FK_COLUMNS="RPTP_NO" */
+    SELECT count(*) INTO NUMROWS
+      FROM ERWIN9.EMP
+      WHERE
+        /* %JoinFKPK(:%New,ERWIN9.EMP," = "," AND") */
+        :new.RPTP_NO = ERWIN9.EMP.EMP_NO;
+    IF (
+      /* %NotnullFK(:%New," IS NOT NULL AND") */
+      
+      NUMROWS = 0
+    )
+    THEN
+      raise_application_error(
+        -20002,
+        'Cannot insert ERWIN9.RPTP because ERWIN9.EMP does not exist.'
+      );
+    END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tU_REPORT_ AFTER UPDATE ON RPTP for each row
+-- erwin Builtin Trigger
+-- UPDATE trigger on RPTP 
+DECLARE NUMROWS INTEGER;
+BEGIN
+  /* erwin Builtin Trigger */
+  /* ERWIN9.EMP  ERWIN9.RPTP on child update restrict */
+  /* ERWIN_RELATION:CHECKSUM="00020765", PARENT_OWNER="ERWIN9", PARENT_TABLE="EMP"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="RPTP"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.EMP_ERWIN9.RPTP", FK_COLUMNS="WRTR_NO" */
+  SELECT count(*) INTO NUMROWS
+    FROM ERWIN9.EMP
+    WHERE
+      /* %JoinFKPK(:%New,ERWIN9.EMP," = "," AND") */
+      :new.WRTR_NO = ERWIN9.EMP.EMP_NO;
+  IF (
+    /* %NotnullFK(:%New," IS NOT NULL AND") */
+    
+    NUMROWS = 0
+  )
+  THEN
+    raise_application_error(
+      -20007,
+      'Cannot update ERWIN9.RPTP because ERWIN9.EMP does not exist.'
+    );
+  END IF;
+
+  /* erwin Builtin Trigger */
+  /* ERWIN9.EMP  ERWIN9.RPTP on child update restrict */
+  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="ERWIN9", PARENT_TABLE="EMP"
+    CHILD_OWNER="ERWIN9", CHILD_TABLE="RPTP"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_ERWIN9.EMP_ERWIN9.RPTP", FK_COLUMNS="RPTP_NO" */
+  SELECT count(*) INTO NUMROWS
+    FROM ERWIN9.EMP
+    WHERE
+      /* %JoinFKPK(:%New,ERWIN9.EMP," = "," AND") */
+      :new.RPTP_NO = ERWIN9.EMP.EMP_NO;
+  IF (
+    /* %NotnullFK(:%New," IS NOT NULL AND") */
+    
+    NUMROWS = 0
+  )
+  THEN
+    raise_application_error(
+      -20007,
+      'Cannot update ERWIN9.RPTP because ERWIN9.EMP does not exist.'
+    );
+  END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
