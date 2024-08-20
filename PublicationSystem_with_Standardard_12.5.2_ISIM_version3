@@ -611,7 +611,8 @@ CREATE TABLE STLM
 	STLM_SE_CD           CHAR(3)  NOT NULL ,
 	STLM_YMD             DATETIME  NOT NULL ,
 	STLM_AMT             DEC(15)  NOT NULL ,
-	addcol               CHAR()  NULL 
+	addcol               CHAR()  NULL ,
+	addcol2              CHAR()  NULL 
 );
 
 CREATE UNIQUE INDEX XPK결제 ON STLM
@@ -627,6 +628,7 @@ COMMENT ON COLUMN STLM.STLM_SE_CD is '결제구분코드' ;
 COMMENT ON COLUMN STLM.STLM_YMD is '결제일자' ;
 COMMENT ON COLUMN STLM.STLM_AMT is '결제금액' ;
 COMMENT ON COLUMN STLM.addcol is 'addcol' ;
+COMMENT ON COLUMN STLM.addcol2 is 'addcol2' ;
 
 
 CREATE TABLE RPTP
